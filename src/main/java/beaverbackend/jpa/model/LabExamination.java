@@ -1,6 +1,7 @@
 package beaverbackend.jpa.model;
 
 import beaverbackend.enums.LaboratoryStatusEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -44,20 +45,32 @@ public class LabExamination {
     private LocalDateTime approvalDateTime; //reject
 
     @NonNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "examination_dictionary", referencedColumnName = "code", nullable = false)
     private ExaminationDictionary examinationDictionary;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lab_assist", referencedColumnName = "lab_staff")
+    @JsonIgnore //remove
     private LabAssistant labAssistant;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lab_super", referencedColumnName = "lab_staff")
+    @JsonIgnore //remove
     private LabSupervisor labSupervisor;
 
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "visit", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Visit visit;
+
+    public LabExamination(String doctorNotices, ExaminationDictionary examinationDictionary, Visit visit) {
+        this.doctorNotices = doctorNotices;
+        this.status = LaboratoryStatusEnum.ORDERED;
+        this.orderedDate = LocalDateTime.now();
+        this.examinationDictionary = examinationDictionary;
+        this.visit = visit;
+    }
+
 }

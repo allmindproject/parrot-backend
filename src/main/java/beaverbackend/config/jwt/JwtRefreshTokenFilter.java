@@ -40,11 +40,12 @@ public class JwtRefreshTokenFilter extends OncePerRequestFilter {
             logger.info("[doFilterInternal] :: Started");
             logger.info("[doFilterInternal] Filtering the Http Request:{}", request.getRequestURI());
 
+
             final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
             JwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey(rsaKeyRecord.rsaPublicKey()).build();
 
-            if (!authHeader.startsWith(JwtTokenTypeEnum.BEARER.getHeader())) {
+            if (authHeader == null || !authHeader.startsWith(JwtTokenTypeEnum.BEARER.getHeader())) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -78,7 +79,7 @@ public class JwtRefreshTokenFilter extends OncePerRequestFilter {
             logger.info("[doFilterInternal] Completed");
             filterChain.doFilter(request, response);
         } catch (JwtValidationException e) {
-            logger.error("[doFilterInternal] Exception due to :{}", e.getMessage());
+            logger.error("[doFilterInternal] Exception due to: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
         }
     }

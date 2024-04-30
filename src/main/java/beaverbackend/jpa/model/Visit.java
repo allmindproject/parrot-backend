@@ -30,7 +30,7 @@ public class Visit {
 
     @NonNull
     @Column(name = "scheduled_date", nullable = false)
-    private LocalDateTime scheduledDate;
+    private LocalDateTime scheduledDateTime;
 
     @NonNull
     @Column(name = "status", nullable = false)
@@ -39,19 +39,19 @@ public class Visit {
 
     @NonNull
     @JoinColumn(name = "receptionist", referencedColumnName = "clinic_staff", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"visitList"})
     private Receptionist receptionist;
 
     @NonNull
     @JoinColumn(name = "selected_doctor", referencedColumnName = "clinic_staff", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"visitList"})
     private Doctor selectedDoctor;
 
     @NonNull
     @JoinColumn(name = "patient", referencedColumnName = "insurance_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"visitList"})
     private Patient patient;
 
@@ -61,12 +61,13 @@ public class Visit {
     @OneToMany(mappedBy = "visit", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PhysicalExamination> physicalExaminationList;
 
-    public Visit(@NonNull String description, @NonNull Receptionist receptionist, @NonNull Doctor selectedDoctor, @NonNull Patient patient) {
+    public Visit(@NonNull String description, @NonNull Receptionist receptionist, @NonNull Doctor selectedDoctor, @NonNull Patient patient, @NonNull LocalDateTime scheduledDateTime) {
         this.description = description;
         this.receptionist = receptionist;
         this.selectedDoctor = selectedDoctor;
         this.patient = patient;
         this.visitStatus = VisitStatusEnum.REGISTERED;
+        this.scheduledDateTime = scheduledDateTime;
     }
 
 }

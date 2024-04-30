@@ -20,7 +20,6 @@ public class Patient {
     @NonNull
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "person", referencedColumnName = "nationalIDNumber", nullable = false)
-    @JsonIgnoreProperties({"user"})
     private Person person;
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -16,7 +16,7 @@ public class ClinicStaff {
     @Column(name = "clinic_emp_id")
     private Long clinicEmpId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "person", referencedColumnName = "nationalIDNumber", nullable = false)
     private Person person;
 

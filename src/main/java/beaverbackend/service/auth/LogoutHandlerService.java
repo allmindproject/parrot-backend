@@ -1,4 +1,4 @@
-package beaverbackend.controllers.auth;
+package beaverbackend.service.auth;
 
 import beaverbackend.enums.JwtTokenTypeEnum;
 import beaverbackend.jpa.model.RefreshToken;
@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,8 @@ public class LogoutHandlerService implements LogoutHandler {
             return;
         }
         final String refreshToken = authHeader.substring(7);
+
+        Authentication authentication1 = SecurityContextHolder.getContext().getAuthentication();
 
         RefreshToken storedRefreshToken = refreshTokenRepository.findByToken(refreshToken)
                 .map(token -> {

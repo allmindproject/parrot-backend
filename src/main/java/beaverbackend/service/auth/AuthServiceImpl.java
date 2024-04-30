@@ -1,16 +1,15 @@
-package beaverbackend.controllers.auth;
+package beaverbackend.service.auth;
 
 import beaverbackend.config.jwt.JwtTokenGenerator;
+import beaverbackend.controllers.auth.AuthResponse;
 import beaverbackend.enums.JwtTokenTypeEnum;
 import beaverbackend.jpa.model.AppUser;
 import beaverbackend.jpa.model.RefreshToken;
 import beaverbackend.jpa.repository.RefreshTokenRepository;
 import beaverbackend.service.AppUserService;
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,14 +20,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthServiceImpl implements AuthService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     private final AppUserService appUserService;
     private final JwtTokenGenerator jwtTokenGenerator;
@@ -37,7 +35,7 @@ public class AuthService {
     public AuthResponse getJwtTokensAfterAuthentication(Authentication authentication, HttpServletResponse response) {
         try {
             var userInfoEntity = appUserService.findByEmail(authentication.getName()).orElseThrow(() -> {
-                logger.error("[getJwtTokensAfterAuthentication] User :{} not found", authentication.getName());
+                logger.error("[getJwtTokensAfterAuthentication] User: {} not found", authentication.getName());
                 return new ResponseStatusException(HttpStatus.NOT_FOUND, "USER NOT FOUND");
             });
 

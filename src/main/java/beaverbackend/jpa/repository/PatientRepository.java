@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 import beaverbackend.jpa.model.Patient;
 
+import java.util.Optional;
+
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, String>, JpaSpecificationExecutor<Patient> {
 
-    Patient findByInsuranceId(String insuranceId);
+    Optional<Patient> findByInsuranceId(String insuranceId);
 }

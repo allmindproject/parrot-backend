@@ -1,7 +1,10 @@
 package beaverbackend.jpa.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -21,12 +24,24 @@ public class PhysicalExamination {
     private String result;
 
     @NonNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "examinationDateTime")
+    private LocalDateTime examinationDateTime;
+
+    @NonNull
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "examination_dictionary", referencedColumnName = "code")
     private ExaminationDictionary examinationDictionary;
 
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "visit", referencedColumnName = "id")
+    @JsonIgnore
     private Visit visit;
+
+    public PhysicalExamination(@NonNull String result, @NonNull ExaminationDictionary examinationDictionary, @NonNull LocalDateTime examinationDateTime, @NonNull Visit visit) {
+        this.result = result;
+        this.examinationDictionary = examinationDictionary;
+        this.examinationDateTime = examinationDateTime;
+        this.visit = visit;
+    }
 }

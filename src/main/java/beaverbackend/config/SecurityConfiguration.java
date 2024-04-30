@@ -4,7 +4,7 @@ import beaverbackend.config.jwt.JwtAccessTokenFilter;
 import beaverbackend.config.jwt.JwtRefreshTokenFilter;
 import beaverbackend.config.jwt.JwtTokenUtils;
 import beaverbackend.config.user.CustomUserDetailsService;
-import beaverbackend.controllers.auth.LogoutHandlerService;
+import beaverbackend.service.auth.LogoutHandlerService;
 import beaverbackend.jpa.repository.RefreshTokenRepository;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -38,7 +38,6 @@ import org.springframework.security.oauth2.server.resource.web.access.BearerToke
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -83,7 +82,7 @@ public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecu
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtAccessTokenFilter(rsaKeyRecord, jwtTokenUtils), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(ex -> {
-                    logger.error("[apiSecurityFilterChain] Exception due to :{}", ex);
+                    logger.error("[apiSecurityFilterChain] Exception due to: {}", ex);
                     ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint());
                     ex.accessDeniedHandler(new BearerTokenAccessDeniedHandler());
                 })
@@ -102,7 +101,7 @@ public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecu
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtRefreshTokenFilter(rsaKeyRecord, jwtTokenUtils, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(ex -> {
-                    logger.error("[refreshTokenSecurityFilterChain] Exception due to :{}", ex);
+                    logger.error("[refreshTokenSecurityFilterChain] Exception due to: {}", ex);
                     ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint());
                     ex.accessDeniedHandler(new BearerTokenAccessDeniedHandler());
                 })
@@ -125,9 +124,25 @@ public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecu
                         .addLogoutHandler(logoutHandlerService)
                         .logoutSuccessHandler(((request, response, authentication) -> SecurityContextHolder.clearContext())))
                 .exceptionHandling(ex -> {
-                    logger.error("[refreshTokenSecurityFilterChain] Exception due to :{}", ex);
+                    logger.error("[refreshTokenSecurityFilterChain] Exception due to: {}", ex);
                     ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint());
                     ex.accessDeniedHandler(new BearerTokenAccessDeniedHandler());
+                })
+                .build();
+    }
+
+    @Order(5)
+    @Bean
+    public SecurityFilterChain oAuth2SigninSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
+                .securityMatcher(new AntPathRequestMatcher("/login/oauth2/github/**"))
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .userDetailsService(userDetailsService)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(ex -> {
+                    ex.authenticationEntryPoint((request, response, authException) ->
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage()));
                 })
                 .build();
     }

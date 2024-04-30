@@ -43,7 +43,7 @@ public class JwtAccessTokenFilter extends OncePerRequestFilter {
 
             JwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey(rsaKeyRecord.rsaPublicKey()).build();
 
-            if (!authHeader.startsWith(JwtTokenTypeEnum.BEARER.getHeader())) {
+            if (authHeader == null || !authHeader.startsWith(JwtTokenTypeEnum.BEARER.getHeader())) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -74,7 +74,7 @@ public class JwtAccessTokenFilter extends OncePerRequestFilter {
             logger.info("[doFilterInternal] Completed");
             filterChain.doFilter(request, response);
         } catch (JwtValidationException e) {
-            logger.error("[doFilterInternal] Exception due to :{}", e.getMessage());
+            logger.error("[doFilterInternal] Exception due to: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
         }
     }

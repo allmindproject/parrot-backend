@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class SearchPatientReq {
+public class PatientSearchReq {
 
     @JsonProperty("firstName")
     private String firstName;

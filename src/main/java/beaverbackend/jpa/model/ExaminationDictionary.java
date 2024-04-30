@@ -1,6 +1,7 @@
 package beaverbackend.jpa.model;
 
 import beaverbackend.enums.ExaminationTypeEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,9 +30,11 @@ public class ExaminationDictionary {
     private ExaminationTypeEnum type;
 
     @OneToMany(mappedBy = "examinationDictionary", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<PhysicalExamination> physicalExaminationList;
 
     @OneToMany(mappedBy = "examinationDictionary", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<LabExamination> labExaminationList;
 
     public ExaminationDictionary(@NonNull String code, @NonNull String description, @NonNull ExaminationTypeEnum type) {

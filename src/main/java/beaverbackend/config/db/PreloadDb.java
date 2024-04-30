@@ -5,6 +5,7 @@ import beaverbackend.enums.RightsLevelEnum;
 import beaverbackend.enums.SexEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +33,7 @@ public class PreloadDb {
     }
 
     private void createReceptionists() {
-        registerService.createReceptionist("receptionist1@email.com", "9876543", "Sophia", "Jones", SexEnum.FEMALE, "receptionist1");
+        registerService.createReceptionist("barcic2948@gmail.com", "9876543", "Sophia", "Jones", SexEnum.FEMALE, "receptionist1");
         registerService.createReceptionist("receptionist2@email.com", "3456789", "David", "Brown", SexEnum.MALE, "receptionist2");
     }
 
@@ -51,7 +52,7 @@ public class PreloadDb {
         registerService.createExaminationDictionary("TEMP", "Measure temperature", ExaminationTypeEnum.PHYSICAL);
         registerService.createExaminationDictionary("PRES", "Measure pressure", ExaminationTypeEnum.PHYSICAL);
         registerService.createExaminationDictionary("XRAY", "Take xray", ExaminationTypeEnum.LABORATORY);
-        registerService.createExaminationDictionary("BIOP", "Order Biopsy", ExaminationTypeEnum.LABORATORY);
+        registerService.createExaminationDictionary("BIOP", "Order biopsy", ExaminationTypeEnum.LABORATORY);
         registerService.createExaminationDictionary("WEIG", "Record weight", ExaminationTypeEnum.PHYSICAL);
         registerService.createExaminationDictionary("EKG", "Perform EKG", ExaminationTypeEnum.LABORATORY);
         registerService.createExaminationDictionary("ULTRA", "Perform ultrasound", ExaminationTypeEnum.LABORATORY);
