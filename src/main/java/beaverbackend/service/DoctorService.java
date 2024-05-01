@@ -3,6 +3,8 @@ package beaverbackend.service;
 import beaverbackend.controllers.common.BadRequestException;
 import beaverbackend.controllers.doctor.CreateLabExaminationReq;
 import beaverbackend.controllers.doctor.CreatePhysicalExaminationReq;
+import beaverbackend.controllers.doctor.VisitExaminationListSearchReq;
+import beaverbackend.controllers.doctor.VisitExaminationSearchRes;
 import beaverbackend.controllers.receptionist.DoctorSearchReq;
 import beaverbackend.jpa.model.Doctor;
 import beaverbackend.jpa.model.LabExamination;
@@ -22,4 +24,6 @@ public interface DoctorService {
     LabExamination createLabExamination(CreateLabExaminationReq req) throws BadRequestException;
 
     List<LabExamination> getVistLabExaminationList(Long visitId) throws BadRequestException;
+
+    VisitExaminationSearchRes getVisitExaminationList(VisitExaminationListSearchReq req) throws BadRequestException;
 }

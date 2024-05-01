@@ -1,6 +1,7 @@
 package beaverbackend.jpa.model;
 
 import beaverbackend.enums.ExaminationTypeEnum;
+import beaverbackend.enums.RightsLevelEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,6 +30,11 @@ public class ExaminationDictionary {
     @Enumerated(EnumType.STRING)
     private ExaminationTypeEnum type;
 
+    @NonNull
+    @Column(name = "rights_level", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RightsLevelEnum rightsLevel;
+
     @OneToMany(mappedBy = "examinationDictionary", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<PhysicalExamination> physicalExaminationList;
@@ -37,10 +43,11 @@ public class ExaminationDictionary {
     @JsonIgnore
     private List<LabExamination> labExaminationList;
 
-    public ExaminationDictionary(@NonNull String code, @NonNull String description, @NonNull ExaminationTypeEnum type) {
+    public ExaminationDictionary(@NonNull String code, @NonNull String description, @NonNull ExaminationTypeEnum type, @NonNull RightsLevelEnum rightsLevel) {
         this.code = code;
         this.description = description;
         this.type = type;
+        this.rightsLevel = rightsLevel;
     }
 
 }

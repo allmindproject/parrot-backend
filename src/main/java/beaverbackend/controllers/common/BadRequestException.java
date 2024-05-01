@@ -1,13 +1,15 @@
 package beaverbackend.controllers.common;
 
 import beaverbackend.enums.BadRequestDictEnum;
+import org.springframework.security.core.AuthenticationException;
 
-public class BadRequestException extends Exception {
+public class BadRequestException extends AuthenticationException {
 
     private final BadRequestDictEnum badRequestCode;
     private final String value;
 
     public BadRequestException(BadRequestDictEnum badRequestCode, String value) {
+        super("");
         this.badRequestCode = badRequestCode;
         this.value = value;
     }

@@ -7,6 +7,7 @@ import beaverbackend.controllers.common.VisitSearchRes;
 import beaverbackend.enums.BadRequestDictEnum;
 import beaverbackend.enums.ExaminationTypeEnum;
 import beaverbackend.jpa.model.Visit;
+import beaverbackend.jpa.repository.VisitRepository;
 import beaverbackend.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -44,26 +45,12 @@ public class DoctorController {
     @PreAuthorize("hasAuthority('SCOPE_DOCTOR')")
     @GetMapping("/search-visit-examination")
     public ResponseEntity<?> getExaminationForVisit(@RequestBody VisitExaminationListSearchReq req) {
-
-        VisitExaminationSearchRes res = new VisitExaminationSearchRes();
         try {
-            if (Objects.equals(req.getExaminationType(), "BOTH")) {
-                res.setPhysicalExaminationList(doctorService.getVistPhysicalExaminationList(req.getVisitId()));
-                res.setLabExaminationList(doctorService.getVistLabExaminationList(req.getVisitId()));
-            } else if (ExaminationTypeEnum.valueOf(req.getExaminationType()) == ExaminationTypeEnum.PHYSICAL) {
-                res.setPhysicalExaminationList(doctorService.getVistPhysicalExaminationList(req.getVisitId()));
-            } else if (ExaminationTypeEnum.valueOf(req.getExaminationType()) == ExaminationTypeEnum.LABORATORY) {
-                res.setLabExaminationList(doctorService.getVistLabExaminationList(req.getVisitId()));
-            }
-        } catch (NullPointerException e) {
-            return ResponseEntity.badRequest().body(new BadRequestRes(BadRequestDictEnum.BAD_EXAMINATION_CODE, null));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new BadRequestRes(BadRequestDictEnum.BAD_EXAMINATION_CODE, req.getExaminationType()));
+            return ResponseEntity.ok(doctorService.getVisitExaminationList(req));
         } catch (BadRequestException e) {
             return ResponseEntity.badRequest().body(e.getResponse());
         }
 
-        return ResponseEntity.ok(res);
     }
 
     @PreAuthorize("hasAuthority('SCOPE_DOCTOR')")
@@ -84,7 +71,17 @@ public class DoctorController {
         } catch (BadRequestException e) {
             return ResponseEntity.badRequest().body(e.getResponse());
         }
-
     }
+
+    @PreAuthorize("hasAuthority('SCOPE_DOCTOR')")
+    @PostMapping("/set-visit-status")
+    public ResponseEntity<?> setVisitStatus(@RequestBody SetVisitStatusReq req) {
+        try {
+            return ResponseEntity.ok(visitService.setVisitStatus(req));
+        } catch (BadRequestException e) {
+            return ResponseEntity.badRequest().body(e.getResponse());
+        }
+    }
+
 
 }

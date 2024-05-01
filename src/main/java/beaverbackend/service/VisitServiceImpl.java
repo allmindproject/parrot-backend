@@ -1,6 +1,7 @@
 package beaverbackend.service;
 
 import beaverbackend.controllers.common.BadRequestException;
+import beaverbackend.controllers.doctor.SetVisitStatusReq;
 import beaverbackend.controllers.receptionist.VisitCreateReq;
 import beaverbackend.controllers.common.VisitSearchReq;
 import beaverbackend.enums.BadRequestDictEnum;
@@ -63,5 +64,24 @@ public class VisitServiceImpl implements VisitService {
         Visit visit = visitRepository.findById(visitId).orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_VISIT_ID, visitId.toString()));
         visit.setVisitStatus(VisitStatusEnum.CANCELLED);
         return visitRepository.save(visit);
+    }
+
+    @Override
+    public Visit setVisitStatus(SetVisitStatusReq req) throws BadRequestException {
+
+        if (req.getVisitId() == null) {
+            throw new BadRequestException(BadRequestDictEnum.BAD_VISIT_ID, null);
+        }
+        Visit visit = visitRepository.findById(req.getVisitId()).orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_VISIT_ID, req.getVisitId().toString()));
+        try {
+            visit.setVisitStatus(VisitStatusEnum.valueOf(req.getVisitStatus()));
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(BadRequestDictEnum.BAD_VISIT_STATUS, req.getVisitStatus());
+        } catch (NullPointerException e) {
+            throw new BadRequestException(BadRequestDictEnum.BAD_VISIT_STATUS, null);
+        }
+
+        return visitRepository.save(visit);
+
     }
 }

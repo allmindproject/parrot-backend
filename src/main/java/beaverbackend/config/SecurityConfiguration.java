@@ -1,6 +1,7 @@
 package beaverbackend.config;
 
 import beaverbackend.config.jwt.JwtAccessTokenFilter;
+import beaverbackend.config.jwt.FilterChainExceptionHandler;
 import beaverbackend.config.jwt.JwtRefreshTokenFilter;
 import beaverbackend.config.jwt.JwtTokenUtils;
 import beaverbackend.config.user.CustomUserDetailsService;
@@ -53,6 +54,7 @@ public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecu
     private final JwtTokenUtils jwtTokenUtils;
     private final RefreshTokenRepository refreshTokenRepository;
     private final LogoutHandlerService logoutHandlerService;
+    private final FilterChainExceptionHandler filterChainExceptionHandler;
 
     @Order(1)
     @Bean
@@ -81,6 +83,7 @@ public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecu
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtAccessTokenFilter(rsaKeyRecord, jwtTokenUtils), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(filterChainExceptionHandler, JwtAccessTokenFilter.class)
                 .exceptionHandling(ex -> {
                     logger.error("[apiSecurityFilterChain] Exception due to: {}", ex);
                     ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint());
@@ -100,11 +103,7 @@ public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecu
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtRefreshTokenFilter(rsaKeyRecord, jwtTokenUtils, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(ex -> {
-                    logger.error("[refreshTokenSecurityFilterChain] Exception due to: {}", ex);
-                    ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint());
-                    ex.accessDeniedHandler(new BearerTokenAccessDeniedHandler());
-                })
+                .exceptionHandling(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
@@ -123,11 +122,7 @@ public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecu
                         .logoutUrl("/logout")
                         .addLogoutHandler(logoutHandlerService)
                         .logoutSuccessHandler(((request, response, authentication) -> SecurityContextHolder.clearContext())))
-                .exceptionHandling(ex -> {
-                    logger.error("[refreshTokenSecurityFilterChain] Exception due to: {}", ex);
-                    ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint());
-                    ex.accessDeniedHandler(new BearerTokenAccessDeniedHandler());
-                })
+                .exceptionHandling(Customizer.withDefaults())
                 .build();
     }
 

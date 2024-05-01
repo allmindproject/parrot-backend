@@ -68,8 +68,8 @@ public class DbRegisterService {
         return labSupervisorRepository.save(new LabSupervisor(createLabStaff(email, RoleEnum.LAB_SUPER, nationalIdNumber, firstName, lastName, sex, password), rightsLevel));
     }
 
-    public ExaminationDictionary createExaminationDictionary(String code, String description, ExaminationTypeEnum type) {
-        return examinationDictionaryRepository.save(new ExaminationDictionary(code, description, type));
+    public ExaminationDictionary createExaminationDictionary(String code, String description, ExaminationTypeEnum type, RightsLevelEnum rightsLevel) {
+        return examinationDictionaryRepository.save(new ExaminationDictionary(code, description, type, rightsLevel));
     }
 
 }

@@ -49,21 +49,23 @@ public class PreloadDb {
     }
 
     private void createExaminationDictionary() {
-        registerService.createExaminationDictionary("TEMP", "Measure temperature", ExaminationTypeEnum.PHYSICAL);
-        registerService.createExaminationDictionary("PRES", "Measure pressure", ExaminationTypeEnum.PHYSICAL);
-        registerService.createExaminationDictionary("XRAY", "Take xray", ExaminationTypeEnum.LABORATORY);
-        registerService.createExaminationDictionary("BIOP", "Order biopsy", ExaminationTypeEnum.LABORATORY);
-        registerService.createExaminationDictionary("WEIG", "Record weight", ExaminationTypeEnum.PHYSICAL);
-        registerService.createExaminationDictionary("EKG", "Perform EKG", ExaminationTypeEnum.LABORATORY);
-        registerService.createExaminationDictionary("ULTRA", "Perform ultrasound", ExaminationTypeEnum.LABORATORY);
-        registerService.createExaminationDictionary("BLOOD", "Draw blood", ExaminationTypeEnum.LABORATORY);
-        registerService.createExaminationDictionary("ECG", "Conduct ECG", ExaminationTypeEnum.LABORATORY);
-        registerService.createExaminationDictionary("STETH", "Use stethoscope", ExaminationTypeEnum.PHYSICAL);
-        registerService.createExaminationDictionary("URINE", "Collect urine sample", ExaminationTypeEnum.LABORATORY);
-        registerService.createExaminationDictionary("MRI", "Perform MRI scan", ExaminationTypeEnum.LABORATORY);
-        registerService.createExaminationDictionary("FECAL", "Analyze fecal sample", ExaminationTypeEnum.LABORATORY);
-        registerService.createExaminationDictionary("CARDIO", "Cardiovascular assessment", ExaminationTypeEnum.PHYSICAL);
-        registerService.createExaminationDictionary("NEURO", "Neurological examination", ExaminationTypeEnum.PHYSICAL);
+        registerService.createExaminationDictionary("TEMP", "Measure temperature", ExaminationTypeEnum.PHYSICAL, RightsLevelEnum.NONE);
+        registerService.createExaminationDictionary("PRES", "Measure pressure", ExaminationTypeEnum.PHYSICAL, RightsLevelEnum.NONE);
+        registerService.createExaminationDictionary("WEIG", "Record weight", ExaminationTypeEnum.PHYSICAL, RightsLevelEnum.NONE);
+        registerService.createExaminationDictionary("CARDIO", "Cardiovascular assessment", ExaminationTypeEnum.PHYSICAL, RightsLevelEnum.NONE);
+        registerService.createExaminationDictionary("NEURO", "Neurological examination", ExaminationTypeEnum.PHYSICAL, RightsLevelEnum.NONE);
+        registerService.createExaminationDictionary("STETH", "Use stethoscope", ExaminationTypeEnum.PHYSICAL, RightsLevelEnum.NONE);
+
+        registerService.createExaminationDictionary("XRAY", "Take xray", ExaminationTypeEnum.LABORATORY, RightsLevelEnum.LOW);
+        registerService.createExaminationDictionary("BIOP", "Order biopsy", ExaminationTypeEnum.LABORATORY, RightsLevelEnum.MEDIUM);
+        registerService.createExaminationDictionary("EKG", "Perform EKG", ExaminationTypeEnum.LABORATORY, RightsLevelEnum.HIGH);
+        registerService.createExaminationDictionary("ULTRA", "Perform ultrasound", ExaminationTypeEnum.LABORATORY, RightsLevelEnum.LOW);
+        registerService.createExaminationDictionary("BLOOD", "Draw blood", ExaminationTypeEnum.LABORATORY, RightsLevelEnum.MEDIUM);
+        registerService.createExaminationDictionary("ECG", "Conduct ECG", ExaminationTypeEnum.LABORATORY, RightsLevelEnum.HIGH);
+        registerService.createExaminationDictionary("URINE", "Collect urine sample", ExaminationTypeEnum.LABORATORY, RightsLevelEnum.LOW);
+        registerService.createExaminationDictionary("MRI", "Perform MRI scan", ExaminationTypeEnum.LABORATORY, RightsLevelEnum.MEDIUM);
+        registerService.createExaminationDictionary("FECAL", "Analyze fecal sample", ExaminationTypeEnum.LABORATORY, RightsLevelEnum.HIGH);
+
     }
 
     @Bean

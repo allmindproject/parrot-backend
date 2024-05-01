@@ -1,6 +1,7 @@
 package beaverbackend.service;
 
 import beaverbackend.controllers.common.BadRequestException;
+import beaverbackend.controllers.doctor.SetVisitStatusReq;
 import beaverbackend.controllers.receptionist.VisitCreateReq;
 import beaverbackend.controllers.common.VisitSearchReq;
 import beaverbackend.jpa.model.Visit;
@@ -14,4 +15,6 @@ public interface VisitService {
     List<Visit> searchVisits(VisitSearchReq req);
 
     Visit cancelVisit(Long id) throws BadRequestException;
+
+    Visit setVisitStatus(SetVisitStatusReq req) throws BadRequestException;
 }
