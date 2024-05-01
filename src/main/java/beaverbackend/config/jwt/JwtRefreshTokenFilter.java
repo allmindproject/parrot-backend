@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtValidationException;
@@ -80,7 +81,10 @@ public class JwtRefreshTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (JwtValidationException e) {
             logger.error("[doFilterInternal] Exception due to: {}", e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+            ValidationExceptionHandler.handleJwtExpiredException(response, e);
+        } catch (UsernameNotFoundException e) {
+            logger.error("[doFilterInternal] Exception due to: {}", e.getMessage());
+            ValidationExceptionHandler.handleMissingUserException(response, e);
         }
     }
 }

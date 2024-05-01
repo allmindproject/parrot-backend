@@ -1,6 +1,5 @@
 package beaverbackend.controllers.doctor;
 
-import beaverbackend.enums.ExaminationTypeEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 

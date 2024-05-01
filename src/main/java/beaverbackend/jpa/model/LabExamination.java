@@ -29,6 +29,9 @@ public class LabExamination {
     @Column(name = "result")
     private String result;
 
+    @Column(name = "cancellation_reason")
+    private String cancellationReason;
+
     @NonNull
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -51,12 +54,10 @@ public class LabExamination {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lab_assist", referencedColumnName = "lab_staff")
-    @JsonIgnore //remove
     private LabAssistant labAssistant;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lab_super", referencedColumnName = "lab_staff")
-    @JsonIgnore //remove
     private LabSupervisor labSupervisor;
 
     @NonNull

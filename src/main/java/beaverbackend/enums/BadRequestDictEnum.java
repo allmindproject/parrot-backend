@@ -17,9 +17,12 @@ public enum BadRequestDictEnum {
     BAD_RECEPTIONIST_ID("Could not find receptionist - Internal backend problem, contact author"),
     BAD_DOCTOR_NPWZ_ID("Could not find doctor with specified npwz ID"),
     BAD_PATIENT_INSURANCE_ID("Could not find patient with specified insurance ID"),
+    BAD_ASSISTANT_ID("Could not find assistant - Internal backend problem, contact author"),
+    BAD_SUPERVISOR_ID("Could not find supervisor - Internal backend problem, contact author"),
 
     //Parse
     BAD_DATE("Could not parse date"),
+    BAD_VALUE("Could not parse value"),
 
     //Visit
     BAD_VISIT_ID("Could not find visit by id"),
@@ -29,8 +32,9 @@ public enum BadRequestDictEnum {
     BAD_EXAMINATION_CODE("Could not accept provided examination code"),
     BAD_P_EXAMINATION_RESULT("Could not accept provided physical examination result"),
     BAD_LAB_EXAMINATION_DOCTOR_NOTICE("Could not accept provided doctor notice"),
-    BAD_EXAMINATION_TYPE("Could not accept provided examination type")
-
+    BAD_EXAMINATION_TYPE("Could not accept provided examination type"),
+    BAD_LAB_EXAMINATION_ID("Could not find examination with provided id"),
+    BAD_LAB_EXAMINATION_RESULT("Could not accept provided result"),
     ;
 
     private final String description;

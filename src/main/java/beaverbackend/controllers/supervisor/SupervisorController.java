@@ -1,6 +1,7 @@
-package beaverbackend.controllers.assistant;
+package beaverbackend.controllers.supervisor;
 
 import beaverbackend.controllers.common.BadRequestException;
+import beaverbackend.jpa.model.LabExamination;
 import beaverbackend.service.LabExaminationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,29 +12,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/assistant")
+@RequestMapping("/api/supervisor")
 @RequiredArgsConstructor
-public class AssistantController {
+public class SupervisorController {
 
     private final LabExaminationService labExaminationService;
 
-    @PreAuthorize("hasAuthority('SCOPE_LAB_ASSISTANT')")
-    @PostMapping("/complete-examination")
-    public ResponseEntity<?> labExamination(@RequestBody CompleteLabExaminationReq req) {
+    @PreAuthorize("hasAuthority('SCOPE_LAB_SUPER')")
+    @PostMapping("/approve-examination")
+    public ResponseEntity<?> labExamination(@RequestBody ApproveLabExaminationReq req) {
         try {
-            return ResponseEntity.ok(labExaminationService.completeLabExamination(req));
+            LabExamination examination =  labExaminationService.approveLabExamination(req);
+            return ResponseEntity.ok(examination);
         } catch (BadRequestException e) {
             return ResponseEntity.badRequest().body(e.getResponse());
         }
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_LAB_ASSISTANT')")
-    @PostMapping("/cancel-examination")
-    public ResponseEntity<?> labExamination(@RequestBody CancelLabExaminationReq req) {
+    @PreAuthorize("hasAuthority('SCOPE_LAB_SUPER')")
+    @PostMapping("/reject-examination")
+    public ResponseEntity<?> labExamination(@RequestBody RejectLabExaminationReq req) {
         try {
-            return ResponseEntity.ok(labExaminationService.cancelLabExamination(req));
+            return ResponseEntity.ok(labExaminationService.rejectLabExamination(req));
         } catch (BadRequestException e) {
             return ResponseEntity.badRequest().body(e.getResponse());
         }
     }
+
 }

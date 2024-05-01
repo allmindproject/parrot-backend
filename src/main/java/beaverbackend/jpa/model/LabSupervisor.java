@@ -1,6 +1,8 @@
 package beaverbackend.jpa.model;
 
 import beaverbackend.enums.RightsLevelEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,14 +25,17 @@ public class LabSupervisor {
     @NonNull
     @Column(name = "rightsLevel", nullable = false)
     @Enumerated(EnumType.STRING)
+    @JsonIgnore
     private RightsLevelEnum rightsLevel;
 
     @NonNull
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lab_staff", referencedColumnName = "lab_emp_id", nullable = false)
+    @JsonIgnoreProperties({"supervisor", "assistant"})
     private LabStaff labStaff;
 
     @OneToMany(mappedBy = "labSupervisor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<LabExamination> labExaminationList;
 
     public LabSupervisor(@NonNull LabStaff labStaff, @NonNull RightsLevelEnum rightsLevel) {

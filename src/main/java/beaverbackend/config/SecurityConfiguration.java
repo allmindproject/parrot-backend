@@ -85,7 +85,6 @@ public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecu
                 .addFilterBefore(new JwtAccessTokenFilter(rsaKeyRecord, jwtTokenUtils), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(filterChainExceptionHandler, JwtAccessTokenFilter.class)
                 .exceptionHandling(ex -> {
-                    logger.error("[apiSecurityFilterChain] Exception due to: {}", ex);
                     ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint());
                     ex.accessDeniedHandler(new BearerTokenAccessDeniedHandler());
                 })

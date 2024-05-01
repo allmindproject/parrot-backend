@@ -17,7 +17,7 @@ public class LabStaff {
     private long labEmpId;
 
     @NonNull
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "person", referencedColumnName = "nationalIDNumber", nullable = false)
     private Person person;
 
