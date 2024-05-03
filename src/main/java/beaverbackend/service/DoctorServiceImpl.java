@@ -1,21 +1,19 @@
 package beaverbackend.service;
 
 import beaverbackend.controllers.common.BadRequestException;
-import beaverbackend.controllers.common.BadRequestRes;
 import beaverbackend.controllers.doctor.CreateLabExaminationReq;
 import beaverbackend.controllers.doctor.CreatePhysicalExaminationReq;
 import beaverbackend.controllers.doctor.VisitExaminationListSearchReq;
 import beaverbackend.controllers.doctor.VisitExaminationSearchRes;
+import beaverbackend.controllers.receptionist.DoctorSearchReq;
 import beaverbackend.enums.BadRequestDictEnum;
 import beaverbackend.enums.ExaminationTypeEnum;
 import beaverbackend.jpa.model.*;
 import beaverbackend.jpa.repository.*;
+import beaverbackend.jpa.specification.DoctorSpecification;
 import beaverbackend.utils.BeaverUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import beaverbackend.controllers.receptionist.DoctorSearchReq;
-import beaverbackend.jpa.specification.DoctorSpecification;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
@@ -47,7 +45,8 @@ public class DoctorServiceImpl implements DoctorService {
     public PhysicalExamination createPhysicalExamination(CreatePhysicalExaminationReq req) throws BadRequestException {
 
         if (req.getVisitId() == null) throw new BadRequestException(BadRequestDictEnum.BAD_VISIT_ID, null);
-        if (req.getExaminationDictCode() == null) throw new BadRequestException(BadRequestDictEnum.BAD_EXAMINATION_CODE, null);
+        if (req.getExaminationDictCode() == null)
+            throw new BadRequestException(BadRequestDictEnum.BAD_EXAMINATION_CODE, null);
         if (req.getExaminationDateTime() == null) throw new BadRequestException(BadRequestDictEnum.BAD_DATE, null);
         if (req.getResult() == null) throw new BadRequestException(BadRequestDictEnum.BAD_P_EXAMINATION_RESULT, null);
 
@@ -80,8 +79,10 @@ public class DoctorServiceImpl implements DoctorService {
     public LabExamination createLabExamination(CreateLabExaminationReq req) throws BadRequestException {
 
         if (req.getVisitId() == null) throw new BadRequestException(BadRequestDictEnum.BAD_VISIT_ID, null);
-        if (req.getExaminationCode() == null) throw new BadRequestException(BadRequestDictEnum.BAD_EXAMINATION_CODE, null);
-        if (req.getDoctorNotices() == null) throw new BadRequestException(BadRequestDictEnum.BAD_LAB_EXAMINATION_DOCTOR_NOTICE, null);
+        if (req.getExaminationCode() == null)
+            throw new BadRequestException(BadRequestDictEnum.BAD_EXAMINATION_CODE, null);
+        if (req.getDoctorNotices() == null)
+            throw new BadRequestException(BadRequestDictEnum.BAD_LAB_EXAMINATION_DOCTOR_NOTICE, null);
 
         Visit visit = visitRepository.findById(req.getVisitId())
                 .orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_VISIT_ID, req.getVisitId().toString()));
@@ -105,7 +106,8 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public VisitExaminationSearchRes getVisitExaminationList(VisitExaminationListSearchReq req) throws BadRequestException {
         if (req.getVisitId() == null) throw new BadRequestException(BadRequestDictEnum.BAD_VISIT_ID, null);
-        if (req.getExaminationType() == null) throw new BadRequestException(BadRequestDictEnum.BAD_EXAMINATION_TYPE, null);
+        if (req.getExaminationType() == null)
+            throw new BadRequestException(BadRequestDictEnum.BAD_EXAMINATION_TYPE, null);
 
         try {
             if (Objects.equals(req.getExaminationType(), "BOTH")) {

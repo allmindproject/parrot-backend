@@ -1,12 +1,12 @@
 package beaverbackend.config;
 
-import beaverbackend.config.jwt.JwtAccessTokenFilter;
 import beaverbackend.config.jwt.FilterChainExceptionHandler;
+import beaverbackend.config.jwt.JwtAccessTokenFilter;
 import beaverbackend.config.jwt.JwtRefreshTokenFilter;
 import beaverbackend.config.jwt.JwtTokenUtils;
 import beaverbackend.config.user.CustomUserDetailsService;
-import beaverbackend.service.auth.LogoutHandlerService;
 import beaverbackend.jpa.repository.RefreshTokenRepository;
+import beaverbackend.service.auth.LogoutHandlerService;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;

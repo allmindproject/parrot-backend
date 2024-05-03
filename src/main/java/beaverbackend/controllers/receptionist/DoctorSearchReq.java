@@ -7,13 +7,10 @@ import lombok.Getter;
 public class DoctorSearchReq {
     @JsonProperty("firstName")
     private String firstName;
-
     @JsonProperty("lastName")
     private String lastName;
-
     @JsonProperty("nationalIdNumber")
     private String nationalIdNumber;
-
     @JsonProperty("npwzId")
     private String npwzId;
 }

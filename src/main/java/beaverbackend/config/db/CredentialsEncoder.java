@@ -23,7 +23,7 @@ public class CredentialsEncoder {
         return new String(Base64.getEncoder().encode(toEncode.getBytes(StandardCharsets.UTF_8)));
     }
 
-    @Bean
+    //@Bean
     CommandLineRunner logUserCredentials() {
         return args -> logger.info("Encoded login data: {}", base64Encode(supervisorUser));
     }

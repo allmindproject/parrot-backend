@@ -39,12 +39,12 @@ public class LabExamination {
 
     @NonNull
     @Column(name = "ordered_date", nullable = false)
-    private LocalDateTime orderedDate;
+    private LocalDateTime orderedDateTime;
 
-    @Column(name = "execution")
+    @Column(name = "execution_date_time")
     private LocalDateTime executionDateTime; //cancel
 
-    @Column(name = "approval")
+    @Column(name = "approval_date_time")
     private LocalDateTime approvalDateTime; //reject
 
     @NonNull
@@ -69,7 +69,7 @@ public class LabExamination {
     public LabExamination(String doctorNotices, ExaminationDictionary examinationDictionary, Visit visit) {
         this.doctorNotices = doctorNotices;
         this.status = LaboratoryStatusEnum.ORDERED;
-        this.orderedDate = LocalDateTime.now();
+        this.orderedDateTime = LocalDateTime.now();
         this.examinationDictionary = examinationDictionary;
         this.visit = visit;
     }

@@ -52,7 +52,7 @@ public class Oauth2LoginServiceImpl implements OAuth2LoginService {
         } catch (HttpClientErrorException e) {
             throw new BadRequestException(BadRequestDictEnum.BAD_OAUTH2_LOGIN, e.getMessage());
         } catch (NullPointerException e) {
-            throw  new BadRequestException(BadRequestDictEnum.BAD_OAUTH2_LOGIN, null);
+            throw new BadRequestException(BadRequestDictEnum.BAD_OAUTH2_LOGIN, null);
         }
 
         AppUser user = appUserRepository.findByEmail(userResponse.getEmail()).orElse(null);

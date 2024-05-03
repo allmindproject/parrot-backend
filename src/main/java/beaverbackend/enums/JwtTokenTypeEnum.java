@@ -8,7 +8,7 @@ public enum JwtTokenTypeEnum {
 
     private final String header;
 
-    private JwtTokenTypeEnum(String header) {
+    JwtTokenTypeEnum(String header) {
         this.header = header;
     }
 }

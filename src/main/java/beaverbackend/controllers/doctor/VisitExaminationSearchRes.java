@@ -13,10 +13,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class VisitExaminationSearchRes {
-
     @JsonProperty("physicalExaminationList")
     private List<PhysicalExamination> physicalExaminationList;
-
     @JsonProperty("labExaminationList")
     private List<LabExamination> labExaminationList;
 }

@@ -5,7 +5,6 @@ import beaverbackend.enums.RightsLevelEnum;
 import beaverbackend.enums.SexEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -65,7 +64,6 @@ public class PreloadDb {
         registerService.createExaminationDictionary("URINE", "Collect urine sample", ExaminationTypeEnum.LABORATORY, RightsLevelEnum.LOW);
         registerService.createExaminationDictionary("MRI", "Perform MRI scan", ExaminationTypeEnum.LABORATORY, RightsLevelEnum.MEDIUM);
         registerService.createExaminationDictionary("FECAL", "Analyze fecal sample", ExaminationTypeEnum.LABORATORY, RightsLevelEnum.HIGH);
-
     }
 
     @Bean

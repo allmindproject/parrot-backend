@@ -75,9 +75,9 @@ public class AuthServiceImpl implements AuthService {
         return refreshTokenCookie;
     }
 
-    public Object getAccessTokenUsingRefreshToken(String authorizationHeader) {
+    public AuthResponse getAccessTokenUsingRefreshToken(String authorizationHeader) {
         if (!authorizationHeader.startsWith(JwtTokenTypeEnum.BEARER.getHeader())) {
-            return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Please verify your token type");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Please verify your token type");
         }
 
         final String refreshToken = authorizationHeader.substring(7);

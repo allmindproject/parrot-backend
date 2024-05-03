@@ -8,6 +8,6 @@ public interface AuthService {
 
     public AuthResponse getJwtTokensAfterAuthentication(Authentication authentication, HttpServletResponse response);
 
-    public Object getAccessTokenUsingRefreshToken(String authorizationHeader);
+    public AuthResponse getAccessTokenUsingRefreshToken(String authorizationHeader);
 
 }

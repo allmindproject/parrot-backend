@@ -1,22 +1,22 @@
 package beaverbackend.service;
 
 import beaverbackend.controllers.common.BadRequestException;
+import beaverbackend.controllers.common.VisitSearchReq;
 import beaverbackend.controllers.doctor.SetVisitStatusReq;
 import beaverbackend.controllers.receptionist.VisitCreateReq;
-import beaverbackend.controllers.common.VisitSearchReq;
 import beaverbackend.enums.BadRequestDictEnum;
 import beaverbackend.enums.VisitStatusEnum;
 import beaverbackend.jpa.model.*;
 import beaverbackend.jpa.repository.AppUserRepository;
 import beaverbackend.jpa.repository.DoctorRepository;
 import beaverbackend.jpa.repository.PatientRepository;
+import beaverbackend.jpa.repository.VisitRepository;
 import beaverbackend.jpa.specification.VisitSpecification;
 import beaverbackend.utils.BeaverUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import beaverbackend.jpa.repository.VisitRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;

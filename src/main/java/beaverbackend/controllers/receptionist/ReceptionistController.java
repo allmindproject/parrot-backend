@@ -28,25 +28,19 @@ public class ReceptionistController {
     @PreAuthorize("hasAuthority('SCOPE_RECEPTIONIST')")
     @GetMapping("/search-patient")
     public ResponseEntity<List<Patient>> searchPatient(@RequestBody PatientSearchReq req) {
-        List<Patient> searchResult = patientService.searchPatients(req);
-        return ResponseEntity.ok(searchResult);
+        return ResponseEntity.ok(patientService.searchPatients(req));
     }
 
     @PreAuthorize("hasAuthority('SCOPE_RECEPTIONIST')")
     @GetMapping("/search-doctor")
     public ResponseEntity<List<Doctor>> searchDoctor(@RequestBody DoctorSearchReq req) {
-        List<Doctor> searchResult = doctorService.searchDoctors(req);
-        return ResponseEntity.ok(searchResult);
+        return ResponseEntity.ok(doctorService.searchDoctors(req));
     }
 
     @PreAuthorize("hasAuthority('SCOPE_RECEPTIONIST')")
     @PostMapping("/create-visit")
-    public ResponseEntity<?> scheduleVisit(@RequestBody VisitCreateReq req) {
-        try {
-            return ResponseEntity.ok(visitService.createNewVisit(req));
-        } catch (BadRequestException e) {
-            return ResponseEntity.badRequest().body(e.getResponse());
-        }
+    public ResponseEntity<Visit> scheduleVisit(@RequestBody VisitCreateReq req) {
+        return ResponseEntity.ok(visitService.createNewVisit(req));
     }
 
     @PreAuthorize("hasAuthority('SCOPE_RECEPTIONIST')")
@@ -55,18 +49,12 @@ public class ReceptionistController {
         List<Visit> searchResult = visitService.searchVisits(req);
         List<VisitSearchRes> result = searchResult.stream()
                 .map(visit -> new VisitSearchRes(visit, visit.getPatient(), visit.getSelectedDoctor())).toList();
-
         return ResponseEntity.ok(result);
     }
 
     @PreAuthorize("hasAuthority('SCOPE_RECEPTIONIST')")
     @PostMapping("/cancel-visit")
-    public ResponseEntity<?> cancelVisit(@RequestBody VisitCancelReq req) {
-        try {
-            visitService.cancelVisit(req.getVisitId());
-        } catch (BadRequestException e) {
-            return ResponseEntity.badRequest().body(e.getResponse());
-        }
-        return ResponseEntity.ok("Visit cancelled");
+    public ResponseEntity<Visit> cancelVisit(@RequestBody VisitCancelReq req) {
+        return ResponseEntity.ok(visitService.cancelVisit(req.getVisitId()));
     }
 }

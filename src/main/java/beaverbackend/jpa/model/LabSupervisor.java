@@ -25,7 +25,6 @@ public class LabSupervisor {
     @NonNull
     @Column(name = "rightsLevel", nullable = false)
     @Enumerated(EnumType.STRING)
-    @JsonIgnore
     private RightsLevelEnum rightsLevel;
 
     @NonNull

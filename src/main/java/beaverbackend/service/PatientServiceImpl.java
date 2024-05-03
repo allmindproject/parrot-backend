@@ -1,11 +1,11 @@
 package beaverbackend.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import beaverbackend.controllers.receptionist.PatientSearchReq;
 import beaverbackend.jpa.model.Patient;
 import beaverbackend.jpa.repository.PatientRepository;
 import beaverbackend.jpa.specification.PatientSpecification;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 

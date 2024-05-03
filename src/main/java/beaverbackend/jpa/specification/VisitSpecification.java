@@ -27,7 +27,7 @@ public class VisitSpecification {
             if (req.getPatientLastName() != null && !req.getPatientLastName().isEmpty())
                 predicates.add(builder.and(builder.like(personPatientJoin.get("lastName"), "%" + req.getPatientLastName() + "%")));
             if (req.getPatientInsuranceId() != null && !req.getPatientInsuranceId().isEmpty())
-                predicates.add(builder.and(builder.equal(patientJoin.get("nationalIdNumber"), req.getPatientInsuranceId())));
+                predicates.add(builder.and(builder.equal(patientJoin.get("insuranceId"), req.getPatientInsuranceId())));
 
             if (req.getDoctorFirstName() != null && !req.getDoctorFirstName().isEmpty())
                 predicates.add(builder.and(builder.like(personDoctorJoin.get("firstName"), "%" + req.getDoctorFirstName() + "%")));

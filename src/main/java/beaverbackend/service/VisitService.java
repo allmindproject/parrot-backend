@@ -1,9 +1,9 @@
 package beaverbackend.service;
 
 import beaverbackend.controllers.common.BadRequestException;
+import beaverbackend.controllers.common.VisitSearchReq;
 import beaverbackend.controllers.doctor.SetVisitStatusReq;
 import beaverbackend.controllers.receptionist.VisitCreateReq;
-import beaverbackend.controllers.common.VisitSearchReq;
 import beaverbackend.jpa.model.Visit;
 
 import java.util.List;
