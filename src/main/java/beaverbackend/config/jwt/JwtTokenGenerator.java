@@ -1,5 +1,6 @@
 package beaverbackend.config.jwt;
 
+import beaverbackend.jpa.model.Person;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ public class JwtTokenGenerator {
     private final JwtEncoder jwtEncoder;
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenGenerator.class);
 
-    public String generateAccessToken(Authentication authentication) {
+    public String generateAccessToken(Authentication authentication, Person person) {
         logger.info("[generateAccessToken] Token creation started for: {}", authentication.getName());
         String role = getUserRole(authentication);
         JwtClaimsSet claims = JwtClaimsSet.builder()
@@ -31,6 +32,8 @@ public class JwtTokenGenerator {
                 .expiresAt(Instant.now().plus(15, ChronoUnit.MINUTES))
                 .subject(authentication.getName())
                 .claim("scope", role)
+                .claim("firstName", person.getFirstName())
+                .claim("lastName", person.getLastName())
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
