@@ -4,6 +4,7 @@ import beaverbackend.config.jwt.JwtTokenGenerator;
 import beaverbackend.controllers.auth.AuthResponse;
 import beaverbackend.enums.JwtTokenTypeEnum;
 import beaverbackend.jpa.model.AppUser;
+import beaverbackend.jpa.model.Person;
 import beaverbackend.jpa.model.RefreshToken;
 import beaverbackend.jpa.repository.RefreshTokenRepository;
 import beaverbackend.service.AppUserService;
@@ -34,12 +35,14 @@ public class AuthServiceImpl implements AuthService {
 
     public AuthResponse getJwtTokensAfterAuthentication(Authentication authentication, HttpServletResponse response) {
         try {
-            var userInfoEntity = appUserService.findByEmail(authentication.getName()).orElseThrow(() -> {
+            AppUser userInfoEntity = appUserService.findByEmail(authentication.getName()).orElseThrow(() -> {
                 logger.error("[getJwtTokensAfterAuthentication] User: {} not found", authentication.getName());
                 return new ResponseStatusException(HttpStatus.NOT_FOUND, "USER NOT FOUND");
             });
 
-            String accessToken = jwtTokenGenerator.generateAccessToken(authentication);
+            Person person = userInfoEntity.getPerson();
+
+            String accessToken = jwtTokenGenerator.generateAccessToken(authentication, person);
             String refreshToken = jwtTokenGenerator.generateRefreshToken(authentication);
             saveUserRefreshToken(userInfoEntity, refreshToken);
             createRefreshTokenCookie(response, refreshToken);
@@ -87,9 +90,10 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Refresh token revoked"));
 
         AppUser appUser = refreshTokenEntity.getUser();
+        Person person = appUser.getPerson();
 
         Authentication authentication = createAuthenticationObject(appUser);
-        String accessToken = jwtTokenGenerator.generateAccessToken(authentication);
+        String accessToken = jwtTokenGenerator.generateAccessToken(authentication, person);
 
         return AuthResponse.builder()
                 .accessToken(accessToken)
