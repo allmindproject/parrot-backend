@@ -27,7 +27,13 @@ public class ReceptionistController {
 
     @PreAuthorize("hasAuthority('SCOPE_RECEPTIONIST')")
     @GetMapping("/search-patient")
-    public ResponseEntity<List<Patient>> searchPatient(@RequestBody PatientSearchReq req) {
+    public ResponseEntity<List<Patient>> searchPatient(
+            @RequestParam(value = "firstName", required = false) String firstName,
+            @RequestParam(value = "lastName", required = false) String lastName,
+            @RequestParam(value = "nationalIdNumber", required = false) String nationalIdNumber,
+            @RequestParam(value = "insuranceId", required = false) String insuranceId)
+    {
+        PatientSearchReq req = new PatientSearchReq(firstName, lastName, nationalIdNumber, insuranceId);
         return ResponseEntity.ok(patientService.searchPatients(req));
     }
 
