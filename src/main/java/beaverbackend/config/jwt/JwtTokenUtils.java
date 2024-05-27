@@ -25,11 +25,11 @@ public class JwtTokenUtils {
         return token.getSubject();
     }
 
-    public boolean isTokenValid(Jwt token, CustomUserDetails userDetails){
+    public boolean isTokenValid(Jwt token, CustomUserDetails userDetails) {
         final String userName = getUsername(token);
         boolean isTokenExpired = getIfTokenIsExpired(token);
         boolean isTokenUserSameAsDatabase = userName.equals(userDetails.getUsername());
-        return !isTokenExpired  && isTokenUserSameAsDatabase;
+        return !isTokenExpired && isTokenUserSameAsDatabase;
 
     }
 
@@ -40,7 +40,7 @@ public class JwtTokenUtils {
     public CustomUserDetails getUserDetails(String email) {
         return appUserRepository.findByEmail(email)
                 .map(CustomUserDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException("UserEmail: "+email+" does not exist"));
+                .orElseThrow(() -> new UsernameNotFoundException("UserEmail: " + email + " does not exist"));
     }
 
 

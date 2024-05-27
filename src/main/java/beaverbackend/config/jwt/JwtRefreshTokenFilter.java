@@ -2,17 +2,15 @@ package beaverbackend.config.jwt;
 
 import beaverbackend.config.RSAKeyRecord;
 import beaverbackend.config.user.CustomUserDetails;
-import beaverbackend.enums.JwtTokenTypeEnum;
 import beaverbackend.jpa.repository.RefreshTokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,9 +21,9 @@ import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @RequiredArgsConstructor
 public class JwtRefreshTokenFilter extends OncePerRequestFilter {
@@ -39,22 +37,19 @@ public class JwtRefreshTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             logger.info("[doFilterInternal] :: Started");
-            logger.info("[doFilterInternal] Filtering the Http Request:{}", request.getRequestURI());
+            logger.info("[doFilterInternal] Filtering the Http Request: {}", request.getRequestURI());
 
-
-            final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            final String refreshToken = Arrays.stream(request.getCookies()).filter(cookie -> "refresh_token".equals(cookie.getName())).findFirst().map(Cookie::getValue).orElse(null);
 
             JwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey(rsaKeyRecord.rsaPublicKey()).build();
 
-            if (authHeader == null || !authHeader.startsWith(JwtTokenTypeEnum.BEARER.getHeader())) {
+            if (refreshToken == null) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            final String token = authHeader.substring(7);
-            final Jwt jwtToken = jwtDecoder.decode(token);
+            final Jwt jwtToken = jwtDecoder.decode(refreshToken);
             final String username = jwtTokenUtils.getUsername(jwtToken);
-
 
             if (!username.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null) {
 
