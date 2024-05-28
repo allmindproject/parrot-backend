@@ -30,7 +30,13 @@ public class SupervisorController {
 
     @PreAuthorize("hasAuthority('SCOPE_LAB_SUPER')")
     @GetMapping("/search-examination")
-    public ResponseEntity<?> searchLabExamination(@RequestBody LabExaminationSearchReq req) {
+    public ResponseEntity<?> searchLabExamination(
+            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "examinationCode", required = false) String examinationCode,
+            @RequestParam(value = "labAssistantId", required = false) String labAssistantId,
+            @RequestParam(value = "rightsLevel", required = false) String rightsLevel)
+    {
+        LabExaminationSearchReq req = new LabExaminationSearchReq(status, examinationCode, labAssistantId, rightsLevel);
         return ResponseEntity.ok(labExaminationService.supervisorSearchLabExamination(req));
     }
 
