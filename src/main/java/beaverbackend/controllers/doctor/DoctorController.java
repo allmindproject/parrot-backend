@@ -24,22 +24,39 @@ public class DoctorController {
 
     @PreAuthorize("hasAuthority('SCOPE_DOCTOR')")
     @GetMapping("/search-visit")
-    public ResponseEntity<List<VisitSearchRes>> searchVisit(@RequestBody VisitSearchReq req) {
+    public ResponseEntity<List<VisitSearchRes>> searchVisit(
+            @RequestParam(value = "patientFirstName", required = false) String patientFirstName,
+            @RequestParam(value = "patientLastName", required = false) String patientLastName,
+            @RequestParam(value = "patientInsuranceId", required = false) String patientInsuranceId,
+            @RequestParam(value = "doctorFirstName", required = false) String doctorFirstName,
+            @RequestParam(value = "doctorLastName", required = false) String doctorLastName,
+            @RequestParam(value = "doctorNpwzId", required = false) String doctorNpwzId) {
+
+        VisitSearchReq req = new VisitSearchReq(patientFirstName, patientLastName, patientInsuranceId, doctorFirstName, doctorLastName, doctorNpwzId);
         List<Visit> searchResult = visitService.searchVisits(req);
         List<VisitSearchRes> result = searchResult.stream()
-                .map(visit -> new VisitSearchRes(visit, visit.getPatient(), visit.getSelectedDoctor())).toList();
+                .map(visit -> new VisitSearchRes(visit, visit.getPatient(), visit.getSelectedDoctor()))
+                .toList();
         return ResponseEntity.ok(result);
     }
 
     @PreAuthorize("hasAuthority('SCOPE_DOCTOR')")
     @GetMapping("/search-examination")
-    public ResponseEntity<?> searchExamination(@RequestBody ExaminationDictSearchReq req) {
+    public ResponseEntity<?> searchExamination(
+            @RequestParam(value = "code", required = false) String code,
+            @RequestParam(value = "description", required = false) String description) {
+
+        ExaminationDictSearchReq req = new ExaminationDictSearchReq(code, description);
         return ResponseEntity.ok(examinationDictionaryService.searchExaminationDictionary(req));
     }
 
     @PreAuthorize("hasAuthority('SCOPE_DOCTOR')")
     @GetMapping("/search-visit-examination")
-    public ResponseEntity<?> getExaminationForVisit(@RequestBody VisitExaminationListSearchReq req) {
+    public ResponseEntity<?> getExaminationForVisit(
+            @RequestParam(value = "visitId") Long visitId,
+            @RequestParam(value = "examinationType", required = false) String examinationType) {
+
+        VisitExaminationListSearchReq req = new VisitExaminationListSearchReq(visitId, examinationType);
         return ResponseEntity.ok(doctorService.getVisitExaminationList(req));
     }
 
