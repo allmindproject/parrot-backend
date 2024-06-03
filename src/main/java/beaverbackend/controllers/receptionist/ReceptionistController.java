@@ -39,7 +39,13 @@ public class ReceptionistController {
 
     @PreAuthorize("hasAuthority('SCOPE_RECEPTIONIST')")
     @GetMapping("/search-doctor")
-    public ResponseEntity<List<Doctor>> searchDoctor(@RequestBody DoctorSearchReq req) {
+    public ResponseEntity<List<Doctor>> searchDoctor(
+            @RequestParam(value = "firstName", required = false) String firstName,
+            @RequestParam(value = "lastName", required = false) String lastName,
+            @RequestParam(value = "nationalIdNumber", required = false) String nationalIdNumber,
+            @RequestParam(value = "npwzId", required = false) String npwzId) {
+
+        DoctorSearchReq req = new DoctorSearchReq(firstName, lastName, nationalIdNumber, npwzId);
         return ResponseEntity.ok(doctorService.searchDoctors(req));
     }
 
@@ -51,10 +57,21 @@ public class ReceptionistController {
 
     @PreAuthorize("hasAuthority('SCOPE_RECEPTIONIST')")
     @GetMapping("/search-visit")
-    public ResponseEntity<List<VisitSearchRes>> searchVisit(@RequestBody VisitSearchReq req) {
+    public ResponseEntity<List<VisitSearchRes>> searchVisit(
+            @RequestParam(required = false) String patientFirstName,
+            @RequestParam(required = false) String patientLastName,
+            @RequestParam(required = false) String patientInsuranceId,
+            @RequestParam(required = false) String doctorFirstName,
+            @RequestParam(required = false) String doctorLastName,
+            @RequestParam(required = false) String doctorNpwzId) {
+
+        VisitSearchReq req = new VisitSearchReq(patientFirstName, patientLastName, patientInsuranceId, doctorFirstName, doctorLastName, doctorNpwzId);
+
         List<Visit> searchResult = visitService.searchVisits(req);
         List<VisitSearchRes> result = searchResult.stream()
-                .map(visit -> new VisitSearchRes(visit, visit.getPatient(), visit.getSelectedDoctor())).toList();
+                .map(visit -> new VisitSearchRes(visit, visit.getPatient(), visit.getSelectedDoctor()))
+                .toList();
+
         return ResponseEntity.ok(result);
     }
 
