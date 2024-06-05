@@ -66,8 +66,10 @@ public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecu
                 .userDetailsService(userDetailsService)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> {
-                    ex.authenticationEntryPoint((request, response, authException) ->
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage()));
+                    ex.authenticationEntryPoint((request, response, authException) -> {
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+                        response.setHeader("WWW-Authenticate", null);
+                    });
                 })
                 .httpBasic(Customizer.withDefaults())
                 .build();
