@@ -67,11 +67,11 @@ public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecu
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> {
                     ex.authenticationEntryPoint((request, response, authException) -> {
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
                         response.setHeader("WWW-Authenticate", null);
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.getWriter().write(authException.getMessage());
                     });
                 })
-                .httpBasic(Customizer.withDefaults())
                 .build();
     }
 
@@ -90,7 +90,6 @@ public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecu
                     ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint());
                     ex.accessDeniedHandler(new BearerTokenAccessDeniedHandler());
                 })
-                .httpBasic(Customizer.withDefaults())
                 .build();
     }
 
