@@ -4,6 +4,7 @@ import beaverbackend.config.jwt.FilterChainExceptionHandler;
 import beaverbackend.config.jwt.JwtAccessTokenFilter;
 import beaverbackend.config.jwt.JwtRefreshTokenFilter;
 import beaverbackend.config.jwt.JwtTokenUtils;
+import beaverbackend.config.user.CustomBasicAuthenticationEntryPoint;
 import beaverbackend.config.user.CustomUserDetailsService;
 import beaverbackend.jpa.repository.RefreshTokenRepository;
 import beaverbackend.service.auth.LogoutHandlerService;
@@ -65,13 +66,12 @@ public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecu
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .userDetailsService(userDetailsService)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(ex -> {
-                    ex.authenticationEntryPoint((request, response, authException) -> {
-                        response.setHeader("WWW-Authenticate", null);
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        response.getWriter().write(authException.getMessage());
-                    });
-                })
+                .httpBasic(httpBasic -> httpBasic.authenticationEntryPoint(customBasicAuthenticationEntryPoint()))
+                .exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, authException) -> {
+                    response.setHeader("WWW-Authenticate", null);
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write(authException.getMessage());
+                }))
                 .build();
     }
 
@@ -158,5 +158,10 @@ public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecu
     @Bean
     PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
+    }
+
+    @Bean
+    public CustomBasicAuthenticationEntryPoint customBasicAuthenticationEntryPoint() {
+        return new CustomBasicAuthenticationEntryPoint();
     }
 }
