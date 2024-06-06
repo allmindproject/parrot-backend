@@ -1,6 +1,7 @@
 package beaverbackend.controllers.auth;
 
 import beaverbackend.service.auth.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +27,8 @@ public class AuthController {
 
     @PreAuthorize("hasAuthority('SCOPE_REFRESH_TOKEN')")
     @PostMapping("/refresh-token")
-    public ResponseEntity<AuthResponse> getAccessToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        return ResponseEntity.ok(authService.getAccessTokenUsingRefreshToken(authorizationHeader));
+    public ResponseEntity<AuthResponse> getAccessToken(HttpServletRequest request) {
+        return ResponseEntity.ok(authService.getAccessTokenUsingRefreshToken(request));
     }
 
 }

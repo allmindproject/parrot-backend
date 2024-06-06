@@ -15,7 +15,7 @@ public class CredentialsEncoder {
     private static final Logger logger = LoggerFactory.getLogger(CredentialsEncoder.class);
 
     private final String doctorUser = "doctor1@email.com:doctor1";
-    private final String receptionistUser = "barcic2948@gmail.com:receptionist1";
+    private final String receptionistUser = "receptionist2@email.com:receptionist2";
     private final String assistantUser = "assistant1@email.com:assistant1";
     private final String supervisorUser = "supervisor1@email.com:supervisor1";
 
@@ -25,7 +25,7 @@ public class CredentialsEncoder {
 
     @Bean
     CommandLineRunner logUserCredentials() {
-        return args -> logger.info("Encoded login data: {}", base64Encode(receptionistUser));
+        return args -> logger.info("Encoded login data: Basic {}", base64Encode(receptionistUser));
     }
 
 }

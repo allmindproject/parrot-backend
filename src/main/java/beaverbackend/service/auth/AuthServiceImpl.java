@@ -9,6 +9,7 @@ import beaverbackend.jpa.model.RefreshToken;
 import beaverbackend.jpa.repository.RefreshTokenRepository;
 import beaverbackend.service.AppUserService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -35,14 +37,12 @@ public class AuthServiceImpl implements AuthService {
 
     public AuthResponse getJwtTokensAfterAuthentication(Authentication authentication, HttpServletResponse response) {
         try {
-            AppUser userInfoEntity = appUserService.findByEmail(authentication.getName()).orElseThrow(() -> {
+            var userInfoEntity = appUserService.findByEmail(authentication.getName()).orElseThrow(() -> {
                 logger.error("[getJwtTokensAfterAuthentication] User: {} not found", authentication.getName());
                 return new ResponseStatusException(HttpStatus.NOT_FOUND, "USER NOT FOUND");
             });
 
-            Person person = userInfoEntity.getPerson();
-
-            String accessToken = jwtTokenGenerator.generateAccessToken(authentication, person);
+            String accessToken = jwtTokenGenerator.generateAccessToken(authentication, userInfoEntity);
             String refreshToken = jwtTokenGenerator.generateRefreshToken(authentication);
             saveUserRefreshToken(userInfoEntity, refreshToken);
             createRefreshTokenCookie(response, refreshToken);
@@ -79,22 +79,18 @@ public class AuthServiceImpl implements AuthService {
         return refreshTokenCookie;
     }
 
-    public AuthResponse getAccessTokenUsingRefreshToken(String authorizationHeader) {
-        if (!authorizationHeader.startsWith(JwtTokenTypeEnum.BEARER.getHeader())) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Please verify your token type");
-        }
+    public AuthResponse getAccessTokenUsingRefreshToken(HttpServletRequest request) {
 
-        final String refreshToken = authorizationHeader.substring(7);
+        final String refreshToken = Arrays.stream(request.getCookies()).filter(cookie -> "refresh_token".equals(cookie.getName())).findFirst().map(Cookie::getValue).orElse(null);
 
         RefreshToken refreshTokenEntity = refreshTokenRepository.findByToken(refreshToken)
                 .filter(tokens -> !tokens.isRevoked())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Refresh token revoked"));
 
         AppUser appUser = refreshTokenEntity.getUser();
-        Person person = appUser.getPerson();
 
         Authentication authentication = createAuthenticationObject(appUser);
-        String accessToken = jwtTokenGenerator.generateAccessToken(authentication, person);
+        String accessToken = jwtTokenGenerator.generateAccessToken(authentication, appUser);
 
         return AuthResponse.builder()
                 .accessToken(accessToken)
@@ -111,6 +107,4 @@ public class AuthServiceImpl implements AuthService {
         GrantedAuthority authority = new SimpleGrantedAuthority(role);
         return new UsernamePasswordAuthenticationToken(username, password, List.of(authority));
     }
-
-
 }
