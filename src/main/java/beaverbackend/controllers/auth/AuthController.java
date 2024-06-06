@@ -25,7 +25,6 @@ public class AuthController {
         return ResponseEntity.ok(authService.getJwtTokensAfterAuthentication(authentication, response));
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_REFRESH_TOKEN')")
     @PostMapping("/refresh-token")
     public ResponseEntity<AuthResponse> getAccessToken(HttpServletRequest request) {
         return ResponseEntity.ok(authService.getAccessTokenUsingRefreshToken(request));
