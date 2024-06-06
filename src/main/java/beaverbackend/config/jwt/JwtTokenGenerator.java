@@ -1,5 +1,6 @@
 package beaverbackend.config.jwt;
 
+import beaverbackend.jpa.model.AppUser;
 import beaverbackend.jpa.model.Person;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class JwtTokenGenerator {
     private final JwtEncoder jwtEncoder;
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenGenerator.class);
 
-    public String generateAccessToken(Authentication authentication, Person person) {
+    public String generateAccessToken(Authentication authentication, AppUser appUser) {
         logger.info("[generateAccessToken] Token creation started for: {}", authentication.getName());
         String role = getUserRole(authentication);
         JwtClaimsSet claims = JwtClaimsSet.builder()
@@ -32,8 +33,8 @@ public class JwtTokenGenerator {
                 .expiresAt(Instant.now().plus(15, ChronoUnit.MINUTES))
                 .subject(authentication.getName())
                 .claim("scope", role)
-                .claim("firstName", person.getFirstName())
-                .claim("lastName", person.getLastName())
+                .claim("firstName", getUserFirstName(appUser))
+                .claim("lastName", getUserLastName(appUser))
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
@@ -56,6 +57,14 @@ public class JwtTokenGenerator {
 
     private String getUserRole(Authentication authentication) {
         return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(""));
+    }
+
+    private String getUserFirstName(AppUser appUser) {
+        return appUser.getPerson().getFirstName();
+    }
+
+    private String getUserLastName(AppUser appUser) {
+        return appUser.getPerson().getLastName();
     }
 
 }
