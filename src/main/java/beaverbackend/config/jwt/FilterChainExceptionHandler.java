@@ -24,6 +24,7 @@ public class FilterChainExceptionHandler extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             logger.error("[JwtFilterChainExceptionFilter] Encountered exception {}", e.getMessage());
+            e.printStackTrace();
             String jsonResponse = objectMapper.writeValueAsString(e.getMessage());
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.setContentType("application/json");
