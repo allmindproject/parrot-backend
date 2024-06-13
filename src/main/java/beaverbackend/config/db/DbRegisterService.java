@@ -72,4 +72,8 @@ public class DbRegisterService {
         return examinationDictionaryRepository.save(new ExaminationDictionary(code, description, type, rightsLevel));
     }
 
+    public boolean checkIfDataIsPresent() {
+        return doctorRepository.findById(1L).isPresent();
+    }
+
 }
