@@ -1,5 +1,6 @@
 package beaverbackend.jpa.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,6 +23,7 @@ public class Patient {
     @JoinColumn(name = "person", referencedColumnName = "nationalIDNumber", nullable = false)
     private Person person;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Visit> visitList;
 

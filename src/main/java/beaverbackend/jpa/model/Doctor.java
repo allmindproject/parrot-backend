@@ -1,5 +1,6 @@
 package beaverbackend.jpa.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,6 +30,7 @@ public class Doctor {
     @JsonIgnoreProperties({"doctor", "receptionist"})
     private ClinicStaff clinicStaff;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "selectedDoctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Visit> visitList;
 
