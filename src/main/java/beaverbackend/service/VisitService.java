@@ -14,6 +14,8 @@ public interface VisitService {
 
     List<Visit> searchVisits(VisitSearchReq req);
 
+    Visit getVisitById(Long visitId);
+
     Visit cancelVisit(Long id) throws BadRequestException;
 
     Visit setVisitStatus(SetVisitStatusReq req) throws BadRequestException;

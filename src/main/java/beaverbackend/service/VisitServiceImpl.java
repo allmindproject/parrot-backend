@@ -59,6 +59,12 @@ public class VisitServiceImpl implements VisitService {
         return visitRepository.findAll(VisitSpecification.searchSpecification(req));
     }
 
+
+    @Override
+    public Visit getVisitById(Long visitId) throws BadRequestException {
+        return visitRepository.findById(visitId).orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_VISIT_ID, visitId.toString()));
+    }
+
     @Override
     public Visit cancelVisit(Long visitId) throws BadRequestException {
         Visit visit = visitRepository.findById(visitId).orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_VISIT_ID, visitId.toString()));

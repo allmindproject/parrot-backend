@@ -41,6 +41,14 @@ public class DoctorController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_DOCTOR')")
+    @GetMapping("/get-visit/{visitId}")
+    public ResponseEntity<VisitSearchRes> getVisitById(@PathVariable Long visitId) {
+        Visit visit = visitService.getVisitById(visitId);
+        VisitSearchRes response = new VisitSearchRes(visit, visit.getPatient(), visit.getSelectedDoctor());
+        return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_DOCTOR')")
     @GetMapping("/search-examination")
     public ResponseEntity<?> searchExamination(
             @RequestParam(value = "code", required = false) String code,
