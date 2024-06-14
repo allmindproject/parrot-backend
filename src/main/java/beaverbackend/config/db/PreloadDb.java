@@ -8,9 +8,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 @Slf4j
 @Configuration
+@EnableScheduling
+@Component
 @RequiredArgsConstructor
 public class PreloadDb {
 
@@ -66,18 +72,22 @@ public class PreloadDb {
         registerService.createExaminationDictionary("FECAL", "Analyze fecal sample", ExaminationTypeEnum.LABORATORY, RightsLevelEnum.HIGH);
     }
 
-    @Bean
-    CommandLineRunner initDatabase() {
+    @Scheduled(initialDelay = 1000, fixedRate = Long.MAX_VALUE)
+    public void initDatabase() {
         log.info("Preloading database");
+
+        if(registerService.checkIfDataIsPresent()) {
+            log.info("Database already preloaded");
+            return;
+        }
+
         createPatients();
         createDoctors();
         createReceptionists();
         createLabAssistants();
         createLabSupervisors();
         createExaminationDictionary();
-        return args -> {
-            log.info("Completed preload");
-        };
+        log.info("Completed preload");
     }
 
 }
