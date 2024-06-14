@@ -21,7 +21,7 @@ public class Receptionist {
     private Long id;
 
     @NonNull
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "clinic_staff", referencedColumnName = "clinic_emp_id", nullable = false)
     @JsonIgnoreProperties({"doctor", "receptionist"})
     private ClinicStaff clinicStaff;
