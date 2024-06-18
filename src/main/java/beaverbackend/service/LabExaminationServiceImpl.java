@@ -8,6 +8,7 @@ import beaverbackend.controllers.supervisor.ApproveLabExaminationReq;
 import beaverbackend.controllers.supervisor.RejectLabExaminationReq;
 import beaverbackend.enums.BadRequestDictEnum;
 import beaverbackend.enums.LaboratoryStatusEnum;
+import beaverbackend.enums.RightsLevelEnum;
 import beaverbackend.jpa.model.AppUser;
 import beaverbackend.jpa.model.LabAssistant;
 import beaverbackend.jpa.model.LabExamination;
@@ -21,6 +22,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -171,5 +174,36 @@ public class LabExaminationServiceImpl implements LabExaminationService {
         examination.setStatus(LaboratoryStatusEnum.REJECTED);
 
         return labExaminationRepository.save(examination);
+    }
+
+    @Override
+    public List<LabExamination> supervisorEasySearchLabExamination() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        AppUser appUser = appUserRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_RECEPTIONIST_ID, authentication.getName()));
+        LabSupervisor labSupervisor = appUser.getPerson().getLabStaff().getSupervisor();
+
+        RightsLevelEnum rightsLevelEnum = labSupervisor.getRightsLevel();
+
+
+        List<LabExamination> examinations = new ArrayList<>();
+
+        switch (rightsLevelEnum) {
+            case LOW:
+                examinations.addAll(labExaminationRepository.findAll(
+                        LabExaminationSpecification.hasRightsLevels(Collections.singletonList(RightsLevelEnum.LOW))));
+                break;
+            case MEDIUM:
+                examinations.addAll(labExaminationRepository.findAll(
+                        LabExaminationSpecification.hasRightsLevels(List.of(RightsLevelEnum.LOW, RightsLevelEnum.MEDIUM))));
+                break;
+            case HIGH:
+                examinations.addAll(labExaminationRepository.findAll(
+                        LabExaminationSpecification.hasRightsLevels(List.of(RightsLevelEnum.LOW, RightsLevelEnum.MEDIUM, RightsLevelEnum.HIGH))));
+                break;
+        }
+        return examinations;
+
     }
 }

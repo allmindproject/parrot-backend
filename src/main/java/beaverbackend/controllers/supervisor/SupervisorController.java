@@ -40,4 +40,10 @@ public class SupervisorController {
         return ResponseEntity.ok(labExaminationService.supervisorSearchLabExamination(req));
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_LAB_SUPER')")
+    @GetMapping("/find-examination")
+    public ResponseEntity<?> findLabExamination() {
+        return ResponseEntity.ok(labExaminationService.supervisorEasySearchLabExamination());
+    }
+
 }

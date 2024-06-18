@@ -1,13 +1,10 @@
 package beaverbackend.jpa.specification;
 
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 import beaverbackend.enums.LaboratoryStatusEnum;
 import beaverbackend.enums.RightsLevelEnum;
 import beaverbackend.jpa.model.ExaminationDictionary;
-import beaverbackend.jpa.model.LabAssistant;
 import beaverbackend.jpa.model.LabExamination;
 
 import java.util.ArrayList;
@@ -35,4 +32,10 @@ public class LabExaminationSpecification {
         });
     }
 
+    public static Specification<LabExamination> hasRightsLevels(List<RightsLevelEnum> rightsLevels) {
+        return (Root<LabExamination> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+            Join<LabExamination, ExaminationDictionary> examinationDictionaryJoin = root.join("examinationDictionary");
+            return examinationDictionaryJoin.get("rightsLevel").in(rightsLevels);
+        };
+    }
 }

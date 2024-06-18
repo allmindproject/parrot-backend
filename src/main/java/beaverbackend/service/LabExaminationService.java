@@ -23,4 +23,5 @@ public interface LabExaminationService {
 
     public LabExamination rejectLabExamination(RejectLabExaminationReq req);
 
+    public List<LabExamination> supervisorEasySearchLabExamination();
 }

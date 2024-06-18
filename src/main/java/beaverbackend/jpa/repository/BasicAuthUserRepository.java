@@ -10,5 +10,4 @@ import java.util.Optional;
 @Repository
 public interface BasicAuthUserRepository extends JpaRepository<BasicAuthUser, Long> {
     public Optional<BasicAuthUser> findByUser(AppUser user);
-
 }
