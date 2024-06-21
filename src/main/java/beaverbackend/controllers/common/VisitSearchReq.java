@@ -1,8 +1,11 @@
 package beaverbackend.controllers.common;
 
+import beaverbackend.enums.VisitStatusEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.time.LocalDate;
 
 @Getter
 @AllArgsConstructor
@@ -20,4 +23,9 @@ public class VisitSearchReq {
     private String doctorLastName;
     @JsonProperty("doctorNpwzId")
     private String doctorNpwzId;
+
+    @JsonProperty("status")
+    private VisitStatusEnum status;
+    @JsonProperty("scheduledDate")
+    private LocalDate scheduledDate;
 }
