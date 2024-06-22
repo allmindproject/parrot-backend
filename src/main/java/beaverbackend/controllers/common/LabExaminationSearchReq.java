@@ -3,6 +3,7 @@ package beaverbackend.controllers.common;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import java.time.LocalDate;
 
 @Getter
 @AllArgsConstructor
@@ -15,4 +16,6 @@ public class LabExaminationSearchReq {
     private String labAssistantId;
     @JsonProperty("rightsLevel")
     private String rightsLevel;
+    @JsonProperty("orderedDataTime")
+    private LocalDate orderedDateTime;
 }
