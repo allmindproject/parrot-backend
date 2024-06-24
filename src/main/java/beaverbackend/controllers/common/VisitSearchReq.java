@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
@@ -27,5 +28,5 @@ public class VisitSearchReq {
     @JsonProperty("status")
     private VisitStatusEnum status;
     @JsonProperty("scheduledDate")
-    private LocalDate scheduledDate;
+    private LocalDateTime scheduledDate;
 }

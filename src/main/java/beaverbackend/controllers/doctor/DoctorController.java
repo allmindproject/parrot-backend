@@ -1,19 +1,24 @@
 package beaverbackend.controllers.doctor;
 
+import beaverbackend.controllers.common.BadRequestException;
 import beaverbackend.controllers.common.VisitSearchReq;
 import beaverbackend.controllers.common.VisitSearchRes;
+import beaverbackend.enums.BadRequestDictEnum;
 import beaverbackend.jpa.model.Visit;
 import beaverbackend.service.DoctorService;
 import beaverbackend.service.ExaminationDictionaryService;
 import beaverbackend.service.VisitService;
 import beaverbackend.enums.VisitStatusEnum;
+import beaverbackend.utils.BeaverUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -35,9 +40,18 @@ public class DoctorController {
             @RequestParam(value = "doctorLastName", required = false) String doctorLastName,
             @RequestParam(value = "doctorNpwzId", required = false) String doctorNpwzId,
             @RequestParam(value = "status", required = false) VisitStatusEnum status,
-            @RequestParam(value = "scheduledDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate scheduledDate) {
+            @RequestParam(value = "scheduledDate", required = false) String scheduledDate) {
 
-        VisitSearchReq req = new VisitSearchReq(patientFirstName, patientLastName, patientInsuranceId, doctorFirstName, doctorLastName, doctorNpwzId, status, scheduledDate);
+        LocalDateTime scheduledDateTime;
+
+        try {
+            scheduledDateTime = BeaverUtils.convertReqToDateTime(scheduledDate);
+        } catch (DateTimeException e) {
+            throw new BadRequestException(BadRequestDictEnum.BAD_DATE, scheduledDate);
+        }
+
+        VisitSearchReq req = new VisitSearchReq(patientFirstName, patientLastName, patientInsuranceId, doctorFirstName,
+                doctorLastName, doctorNpwzId, status, scheduledDateTime);
         List<Visit> searchResult = visitService.searchVisits(req);
         List<VisitSearchRes> result = searchResult.stream()
                 .map(visit -> new VisitSearchRes(visit, visit.getPatient(), visit.getSelectedDoctor()))

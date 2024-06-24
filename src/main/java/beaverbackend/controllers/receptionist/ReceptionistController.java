@@ -3,6 +3,7 @@ package beaverbackend.controllers.receptionist;
 import beaverbackend.controllers.common.BadRequestException;
 import beaverbackend.controllers.common.VisitSearchReq;
 import beaverbackend.controllers.common.VisitSearchRes;
+import beaverbackend.enums.BadRequestDictEnum;
 import beaverbackend.enums.VisitStatusEnum;
 import beaverbackend.jpa.model.Doctor;
 import beaverbackend.jpa.model.Patient;
@@ -10,13 +11,16 @@ import beaverbackend.jpa.model.Visit;
 import beaverbackend.service.DoctorService;
 import beaverbackend.service.PatientService;
 import beaverbackend.service.VisitService;
+import beaverbackend.utils.BeaverUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -34,8 +38,7 @@ public class ReceptionistController {
             @RequestParam(value = "firstName", required = false) String firstName,
             @RequestParam(value = "lastName", required = false) String lastName,
             @RequestParam(value = "nationalIdNumber", required = false) String nationalIdNumber,
-            @RequestParam(value = "insuranceId", required = false) String insuranceId)
-    {
+            @RequestParam(value = "insuranceId", required = false) String insuranceId) {
         PatientSearchReq req = new PatientSearchReq(firstName, lastName, nationalIdNumber, insuranceId);
         return ResponseEntity.ok(patientService.searchPatients(req));
     }
@@ -68,9 +71,18 @@ public class ReceptionistController {
             @RequestParam(required = false) String doctorLastName,
             @RequestParam(required = false) String doctorNpwzId,
             @RequestParam(required = false) VisitStatusEnum status,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate scheduledDate) {
+            @RequestParam(required = false) String scheduledDate) {
 
-        VisitSearchReq req = new VisitSearchReq(patientFirstName, patientLastName, patientInsuranceId, doctorFirstName, doctorLastName, doctorNpwzId, status, scheduledDate);
+        LocalDateTime scheduledDateTime;
+
+        try {
+            scheduledDateTime = BeaverUtils.convertReqToDateTime(scheduledDate);
+        } catch (DateTimeException e) {
+            throw new BadRequestException(BadRequestDictEnum.BAD_DATE, scheduledDate);
+        }
+
+        VisitSearchReq req = new VisitSearchReq(patientFirstName, patientLastName, patientInsuranceId, doctorFirstName,
+                doctorLastName, doctorNpwzId, status, scheduledDateTime);
 
         List<Visit> searchResult = visitService.searchVisits(req);
         List<VisitSearchRes> result = searchResult.stream()

@@ -1,14 +1,20 @@
 package beaverbackend.controllers.assistant;
 
+import beaverbackend.controllers.common.BadRequestException;
 import beaverbackend.controllers.common.LabExaminationSearchReq;
+import beaverbackend.enums.BadRequestDictEnum;
 import beaverbackend.jpa.model.LabExamination;
 import beaverbackend.service.LabExaminationService;
+import beaverbackend.utils.BeaverUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -37,8 +43,17 @@ public class AssistantController {
             @RequestParam(value = "examinationCode", required = false) String examinationCode,
             @RequestParam(value = "labAssistantId", required = false) String labAssistantId,
             @RequestParam(value = "rightsLevel", required = false) String rightsLevel,
-            @RequestParam(value = "orderedDateTime", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate orderedDateTime)
+            @RequestParam(value = "orderedDateTime", required = false) String orderedDate)
     {
+
+        LocalDateTime orderedDateTime;
+
+        try {
+            orderedDateTime = BeaverUtils.convertReqToDateTime(orderedDate);
+        } catch (DateTimeException e) {
+            throw new BadRequestException(BadRequestDictEnum.BAD_DATE, orderedDate);
+        }
+
         LabExaminationSearchReq req = new LabExaminationSearchReq(status, examinationCode, labAssistantId, rightsLevel, orderedDateTime);
         return ResponseEntity.ok(labExaminationService.assistantSearchLabExamination(req));
     }
