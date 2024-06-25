@@ -73,10 +73,12 @@ public class ReceptionistController {
             @RequestParam(required = false) VisitStatusEnum status,
             @RequestParam(required = false) String scheduledDate) {
 
-        LocalDateTime scheduledDateTime;
+        LocalDateTime scheduledDateTime = null;
 
         try {
-            scheduledDateTime = BeaverUtils.convertReqToDateTime(scheduledDate);
+            if(scheduledDate != null) {
+                scheduledDateTime = BeaverUtils.convertReqToDateTime(scheduledDate);
+            }
         } catch (DateTimeException e) {
             throw new BadRequestException(BadRequestDictEnum.BAD_DATE, scheduledDate);
         }

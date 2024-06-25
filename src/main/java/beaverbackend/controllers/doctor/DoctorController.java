@@ -42,10 +42,12 @@ public class DoctorController {
             @RequestParam(value = "status", required = false) VisitStatusEnum status,
             @RequestParam(value = "scheduledDate", required = false) String scheduledDate) {
 
-        LocalDateTime scheduledDateTime;
+        LocalDateTime scheduledDateTime = null;
 
         try {
-            scheduledDateTime = BeaverUtils.convertReqToDateTime(scheduledDate);
+            if(scheduledDate != null) {
+                scheduledDateTime = BeaverUtils.convertReqToDateTime(scheduledDate);
+            }
         } catch (DateTimeException e) {
             throw new BadRequestException(BadRequestDictEnum.BAD_DATE, scheduledDate);
         }

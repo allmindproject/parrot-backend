@@ -47,7 +47,7 @@ public class LabExaminationServiceImpl implements LabExaminationService {
             status = null;
         }
 
-        return labExaminationRepository.findAll(LabExaminationSpecification.searchSpecification(status, null, null, req.getExaminationCode()));
+        return labExaminationRepository.findAll(LabExaminationSpecification.searchSpecification(status, null, null, req.getExaminationCode(), req.getOrderedDateTime()));
     }
 
     @Override
@@ -75,7 +75,7 @@ public class LabExaminationServiceImpl implements LabExaminationService {
 
         LabSupervisor labSupervisor = appUser.getPerson().getLabStaff().getSupervisor();
 
-        return labExaminationRepository.findAll(LabExaminationSpecification.searchSpecification(status, null, null, req.getExaminationCode()));
+        return labExaminationRepository.findAll(LabExaminationSpecification.searchSpecification(status, null, null, req.getExaminationCode(), req.getOrderedDateTime()));
     }
 
 

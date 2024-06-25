@@ -7,12 +7,14 @@ import beaverbackend.enums.RightsLevelEnum;
 import beaverbackend.jpa.model.ExaminationDictionary;
 import beaverbackend.jpa.model.LabExamination;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LabExaminationSpecification {
 
-    public static Specification<LabExamination> searchSpecification(LaboratoryStatusEnum status, RightsLevelEnum rightsLevel, Long assistantId, String examinationCode) {
+    public static Specification<LabExamination> searchSpecification(LaboratoryStatusEnum status, RightsLevelEnum rightsLevel, Long assistantId, String examinationCode, LocalDateTime orderedDateTime) {
         return ((root, query, builder) -> {
 
             List<Predicate> predicates = new ArrayList<>();
@@ -25,6 +27,9 @@ public class LabExaminationSpecification {
                 predicates.add(builder.and(builder.equal(root.get("status"), status)));
             if (assistantId != null) {
                 predicates.add(builder.and(builder.equal(root.get("labAssistant").get("id"), assistantId)));
+            }
+            if (orderedDateTime != null) {
+                predicates.add(builder.and(builder.greaterThanOrEqualTo(root.get("orderedDateTime"), orderedDateTime)));
             }
 
             query.orderBy(builder.asc(root.get("orderedDateTime")));

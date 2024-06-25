@@ -46,10 +46,12 @@ public class AssistantController {
             @RequestParam(value = "orderedDateTime", required = false) String orderedDate)
     {
 
-        LocalDateTime orderedDateTime;
+        LocalDateTime orderedDateTime = null;
 
         try {
-            orderedDateTime = BeaverUtils.convertReqToDateTime(orderedDate);
+            if (orderedDate != null) {
+                orderedDateTime = BeaverUtils.convertReqToDateTime(orderedDate);
+            }
         } catch (DateTimeException e) {
             throw new BadRequestException(BadRequestDictEnum.BAD_DATE, orderedDate);
         }
