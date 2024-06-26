@@ -37,6 +37,12 @@ public class AssistantController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_LAB_ASSISTANT')")
+    @GetMapping("/get-examination/{examinationId}")
+    public ResponseEntity<LabExamination> getLabExaminationById(@PathVariable Long examinationId) {
+        return ResponseEntity.ok(labExaminationService.getLabExaminationById(examinationId));
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_LAB_ASSISTANT')")
     @GetMapping("/search-examination")
     public ResponseEntity<List<LabExamination>> searchLabExamination(
             @RequestParam(value = "status", required = false) String status,

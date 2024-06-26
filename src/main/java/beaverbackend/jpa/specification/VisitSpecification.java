@@ -37,7 +37,7 @@ public class VisitSpecification {
                 predicates.add(builder.and(builder.equal(root.get("npwzId"), req.getDoctorNpwzId())));
 
             if (req.getScheduledDate() != null)
-                predicates.add(builder.and(builder.greaterThanOrEqualTo(root.get("scheduledDateTime"), req.getScheduledDate())));
+                predicates.add(builder.and(builder.equal(root.get("scheduledDateTime"), req.getScheduledDate())));
             if (req.getStatus() != null)
                 predicates.add(builder.and(builder.equal(root.get("visitStatus"), req.getStatus())));
 

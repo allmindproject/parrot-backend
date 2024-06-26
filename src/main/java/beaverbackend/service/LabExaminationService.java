@@ -15,6 +15,8 @@ public interface LabExaminationService {
 
     public List<LabExamination> supervisorSearchLabExamination(LabExaminationSearchReq req);
 
+    public LabExamination getLabExaminationById(Long examinationId);
+
     public LabExamination cancelLabExamination(CancelLabExaminationReq req);
 
     public LabExamination completeLabExamination(CompleteLabExaminationReq req);

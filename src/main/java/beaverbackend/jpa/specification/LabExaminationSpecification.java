@@ -29,7 +29,7 @@ public class LabExaminationSpecification {
                 predicates.add(builder.and(builder.equal(root.get("labAssistant").get("id"), assistantId)));
             }
             if (orderedDateTime != null) {
-                predicates.add(builder.and(builder.greaterThanOrEqualTo(root.get("orderedDateTime"), orderedDateTime)));
+                predicates.add(builder.and(builder.equal(root.get("orderedDateTime"), orderedDateTime)));
             }
 
             query.orderBy(builder.asc(root.get("orderedDateTime")));
