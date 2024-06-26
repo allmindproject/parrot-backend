@@ -62,13 +62,6 @@ public class LabExaminationServiceImpl implements LabExaminationService {
             status = null;
         }
 
-        Long assistantId;
-        try {
-            assistantId = Long.valueOf(req.getLabAssistantId());
-        } catch (NumberFormatException e) {
-            throw new BadRequestException((BadRequestDictEnum.BAD_VALUE), e.getMessage());
-        }
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         AppUser appUser = appUserRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_ASSISTANT_ID, authentication.getName()));
