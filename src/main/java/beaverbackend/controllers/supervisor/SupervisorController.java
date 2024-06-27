@@ -36,6 +36,12 @@ public class SupervisorController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_LAB_SUPER')")
+    @GetMapping("/get-examination/{examinationId}")
+    public ResponseEntity<LabExamination> getLabExaminationById(@PathVariable Long examinationId) {
+        return ResponseEntity.ok(labExaminationService.getLabExaminationById(examinationId));
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_LAB_SUPER')")
     @GetMapping("/search-examination")
     public ResponseEntity<?> searchLabExamination(
             @RequestParam(value = "status", required = false) String status,
