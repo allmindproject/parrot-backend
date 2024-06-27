@@ -127,7 +127,7 @@ public class LabExaminationServiceImpl implements LabExaminationService {
         LabExamination examination = labExaminationRepository.findById(req.getExaminationId())
                 .orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_LAB_EXAMINATION_ID, req.getExaminationId().toString()));
 
-        if (examination.getLabAssistant() != null)
+        if (examination.getLabAssistant() == null)
             throw new BadRequestException(BadRequestDictEnum.MISSING_ASSISTANT, null);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -152,7 +152,7 @@ public class LabExaminationServiceImpl implements LabExaminationService {
         LabExamination examination = labExaminationRepository.findById(req.getExaminationId())
                 .orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_LAB_EXAMINATION_ID, req.getExaminationId().toString()));
 
-        if (examination.getLabAssistant() != null)
+        if (examination.getLabAssistant() == null)
             throw new BadRequestException(BadRequestDictEnum.MISSING_ASSISTANT, null);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
