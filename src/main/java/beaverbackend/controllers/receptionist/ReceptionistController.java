@@ -44,6 +44,12 @@ public class ReceptionistController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_RECEPTIONIST')")
+    @PostMapping("/create-patient")
+    public ResponseEntity<?> createPatient(@RequestBody PatientCreateReq req) {
+        return ResponseEntity.ok(patientService.createPatient(req));
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_RECEPTIONIST')")
     @GetMapping("/search-doctor")
     public ResponseEntity<List<Doctor>> searchDoctor(
             @RequestParam(value = "firstName", required = false) String firstName,

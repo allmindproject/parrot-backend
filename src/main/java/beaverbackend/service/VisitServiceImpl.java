@@ -2,7 +2,9 @@ package beaverbackend.service;
 
 import beaverbackend.controllers.common.BadRequestException;
 import beaverbackend.controllers.common.VisitSearchReq;
+import beaverbackend.controllers.doctor.VisitCompleteReq;
 import beaverbackend.controllers.doctor.SetVisitStatusReq;
+import beaverbackend.controllers.doctor.VisitDescriptionReq;
 import beaverbackend.controllers.receptionist.VisitCreateReq;
 import beaverbackend.enums.BadRequestDictEnum;
 import beaverbackend.enums.VisitStatusEnum;
@@ -43,6 +45,9 @@ public class VisitServiceImpl implements VisitService {
                 .orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_DOCTOR_NPWZ_ID, req.getDoctorNpwzId()));
         Patient patient = patientRepository.findByInsuranceId(req.getPatientInsuranceId())
                 .orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_PATIENT_INSURANCE_ID, req.getPatientInsuranceId()));
+        if (req.getScheduledDateTime() == null) {
+            throw new BadRequestException(BadRequestDictEnum.BAD_DATE, "Missing date");
+        }
         LocalDateTime visitDateTime;
         try {
             visitDateTime = BeaverUtils.convertReqToDateTime(req.getScheduledDateTime());
@@ -50,7 +55,7 @@ public class VisitServiceImpl implements VisitService {
             throw new BadRequestException(BadRequestDictEnum.BAD_DATE, req.getScheduledDateTime());
         }
 
-        Visit visit = new Visit(req.getDescription(), receptionist, doctor, patient, visitDateTime);
+        Visit visit = new Visit(receptionist, doctor, patient, visitDateTime);
         return visitRepository.save(visit);
     }
 
@@ -59,10 +64,20 @@ public class VisitServiceImpl implements VisitService {
         return visitRepository.findAll(VisitSpecification.searchSpecification(req));
     }
 
-
     @Override
     public Visit getVisitById(Long visitId) throws BadRequestException {
         return visitRepository.findById(visitId).orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_VISIT_ID, visitId.toString()));
+    }
+
+    @Override
+    public Visit completeVisit(VisitCompleteReq req) {
+        if(req.getVisitId() == null) {
+            throw new BadRequestException(BadRequestDictEnum.NO_VISIT_ID, null);
+        }
+        Visit visit = visitRepository.findById(req.getVisitId()).orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_VISIT_ID, req.getVisitId().toString()));
+        visit.setDescription(req.getDiagnostics());
+        visit.setVisitStatus(VisitStatusEnum.COMPLETED);
+        return visitRepository.save(visit);
     }
 
     @Override
@@ -88,6 +103,15 @@ public class VisitServiceImpl implements VisitService {
         }
 
         return visitRepository.save(visit);
+    }
 
+    @Override
+    public Visit setVisitDescription(VisitDescriptionReq req) throws BadRequestException {
+        if(req.getVisitId() == null) {
+            throw new BadRequestException(BadRequestDictEnum.NO_VISIT_ID, null);
+        }
+        Visit visit = visitRepository.findById(req.getVisitId()).orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_VISIT_ID, req.getVisitId().toString()));
+        visit.setDescription(req.getDescription());
+        return visitRepository.save(visit);
     }
 }

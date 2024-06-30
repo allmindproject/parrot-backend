@@ -5,8 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class VisitCreateReq {
-    @JsonProperty("description")
-    private String description;
     @JsonProperty("doctorNpwzId")
     private String doctorNpwzId;
     @JsonProperty("patientInsuranceId")

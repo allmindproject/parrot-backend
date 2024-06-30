@@ -21,7 +21,6 @@ public class Visit {
     @Column(name = "id")
     private long id;
 
-    @NonNull
     @Column(name = "description")
     private String description;
 
@@ -61,8 +60,7 @@ public class Visit {
     @OneToMany(mappedBy = "visit", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PhysicalExamination> physicalExaminationList;
 
-    public Visit(@NonNull String description, @NonNull Receptionist receptionist, @NonNull Doctor selectedDoctor, @NonNull Patient patient, @NonNull LocalDateTime scheduledDateTime) {
-        this.description = description;
+    public Visit(@NonNull Receptionist receptionist, @NonNull Doctor selectedDoctor, @NonNull Patient patient, @NonNull LocalDateTime scheduledDateTime) {
         this.receptionist = receptionist;
         this.selectedDoctor = selectedDoctor;
         this.patient = patient;

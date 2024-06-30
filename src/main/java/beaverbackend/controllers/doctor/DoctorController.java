@@ -45,7 +45,7 @@ public class DoctorController {
         LocalDateTime scheduledDateTime = null;
 
         try {
-            if(scheduledDate != null) {
+            if (scheduledDate != null) {
                 scheduledDateTime = BeaverUtils.convertReqToDateTime(scheduledDate);
             }
         } catch (DateTimeException e) {
@@ -67,6 +67,13 @@ public class DoctorController {
         Visit visit = visitService.getVisitById(visitId);
         VisitSearchRes response = new VisitSearchRes(visit, visit.getPatient(), visit.getSelectedDoctor());
         return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_DOCTOR')")
+    @PostMapping("/set-description")
+    public ResponseEntity<?> setDescription(@RequestBody VisitDescriptionReq req) {
+        Visit visit = visitService.setVisitDescription(req);
+        return ResponseEntity.ok(visit);
     }
 
     @PreAuthorize("hasAuthority('SCOPE_DOCTOR')")
@@ -107,5 +114,11 @@ public class DoctorController {
         return ResponseEntity.ok(visitService.setVisitStatus(req));
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_DOCTOR')")
+    @PostMapping("/complete-visit")
+    public ResponseEntity<?> completeVisit(@RequestBody VisitCompleteReq req) {
+        Visit visit = visitService.completeVisit(req);
+        return ResponseEntity.ok(visit);
+    }
 
 }
