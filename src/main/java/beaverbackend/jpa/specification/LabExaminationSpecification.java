@@ -34,8 +34,8 @@ public class LabExaminationSpecification {
                 LocalDateTime startOfDay = scheduledDate.atStartOfDay();
                 LocalDateTime endOfDay = startOfDay.plusDays(1);
 
-                Predicate greaterOrEqual = builder.greaterThanOrEqualTo(root.get("scheduledDateTime"), startOfDay);
-                Predicate lessThen = builder.lessThan(root.get("scheduledDateTime"), endOfDay);
+                Predicate greaterOrEqual = builder.greaterThanOrEqualTo(root.get("orderedDateTime"), startOfDay);
+                Predicate lessThen = builder.lessThan(root.get("orderedDateTime"), endOfDay);
                 predicates.add(builder.and(greaterOrEqual, lessThen));
             }
 
