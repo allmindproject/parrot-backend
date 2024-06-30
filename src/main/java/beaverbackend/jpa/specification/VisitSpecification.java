@@ -7,6 +7,9 @@ import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +40,13 @@ public class VisitSpecification {
                 predicates.add(builder.and(builder.equal(root.get("npwzId"), req.getDoctorNpwzId())));
 
             if (req.getScheduledDate() != null) {
-                Predicate greaterOrEqual = builder.greaterThanOrEqualTo(root.get("scheduledDateTime"), req.getScheduledDate());
-                Predicate lessThen = builder.lessThan(root.get("scheduledDateTime"), req.getScheduledDate());
+
+                LocalDate scheduledDate = LocalDate.from(req.getScheduledDate());
+                LocalDateTime startOfDay = scheduledDate.atStartOfDay();
+                LocalDateTime endOfDay = startOfDay.plusDays(1);
+
+                Predicate greaterOrEqual = builder.greaterThanOrEqualTo(root.get("scheduledDateTime"), startOfDay);
+                Predicate lessThen = builder.lessThan(root.get("scheduledDateTime"), endOfDay);
                 predicates.add(builder.and(greaterOrEqual, lessThen));
             }
 

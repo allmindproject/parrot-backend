@@ -29,8 +29,13 @@ public class LabExaminationSpecification {
                 predicates.add(builder.and(builder.equal(root.get("labAssistant").get("id"), assistantId)));
             }
             if (orderedDateTime != null) {
-                Predicate greaterOrEqual = builder.greaterThanOrEqualTo(root.get("scheduledDateTime"), orderedDateTime);
-                Predicate lessThen = builder.lessThan(root.get("scheduledDateTime"), orderedDateTime);
+
+                LocalDate scheduledDate = LocalDate.from(orderedDateTime);
+                LocalDateTime startOfDay = scheduledDate.atStartOfDay();
+                LocalDateTime endOfDay = startOfDay.plusDays(1);
+
+                Predicate greaterOrEqual = builder.greaterThanOrEqualTo(root.get("scheduledDateTime"), startOfDay);
+                Predicate lessThen = builder.lessThan(root.get("scheduledDateTime"), endOfDay);
                 predicates.add(builder.and(greaterOrEqual, lessThen));
             }
 
