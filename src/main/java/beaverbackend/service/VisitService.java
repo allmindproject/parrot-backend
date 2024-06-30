@@ -3,8 +3,8 @@ package beaverbackend.service;
 import beaverbackend.controllers.common.BadRequestException;
 import beaverbackend.controllers.common.VisitSearchReq;
 import beaverbackend.controllers.doctor.VisitCompleteReq;
+import beaverbackend.controllers.doctor.VisitDetailsReq;
 import beaverbackend.controllers.doctor.SetVisitStatusReq;
-import beaverbackend.controllers.doctor.VisitDescriptionReq;
 import beaverbackend.controllers.receptionist.VisitCreateReq;
 import beaverbackend.jpa.model.Visit;
 
@@ -24,5 +24,5 @@ public interface VisitService {
 
     Visit setVisitStatus(SetVisitStatusReq req) throws BadRequestException;
 
-    Visit setVisitDescription(VisitDescriptionReq req) throws BadRequestException;
+    Visit setVisitDetails(VisitDetailsReq req) throws BadRequestException;
 }

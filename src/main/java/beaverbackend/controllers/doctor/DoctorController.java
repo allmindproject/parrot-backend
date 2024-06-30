@@ -70,9 +70,9 @@ public class DoctorController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_DOCTOR')")
-    @PostMapping("/set-description")
-    public ResponseEntity<?> setDescription(@RequestBody VisitDescriptionReq req) {
-        Visit visit = visitService.setVisitDescription(req);
+    @PostMapping("/set-details")
+    public ResponseEntity<?> setDetails(@RequestBody VisitDetailsReq req) {
+        Visit visit = visitService.setVisitDetails(req);
         return ResponseEntity.ok(visit);
     }
 
