@@ -71,6 +71,11 @@ public class LabExaminationServiceImpl implements LabExaminationService {
         return labExaminationRepository.findAll(LabExaminationSpecification.searchSpecification(status, null, null, req.getExaminationCode(), req.getOrderedDateTime()));
     }
 
+    @Override
+    public LabExamination getLabExaminationById(Long examinationId) throws BadRequestException {
+
+        return labExaminationRepository.findById(examinationId).orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_LAB_EXAMINATION_ID, examinationId.toString()));
+    }
 
     @Override
     public LabExamination cancelLabExamination(CancelLabExaminationReq req) {
@@ -127,7 +132,7 @@ public class LabExaminationServiceImpl implements LabExaminationService {
         LabExamination examination = labExaminationRepository.findById(req.getExaminationId())
                 .orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_LAB_EXAMINATION_ID, req.getExaminationId().toString()));
 
-        if (examination.getLabAssistant() != null)
+        if (examination.getLabAssistant() == null)
             throw new BadRequestException(BadRequestDictEnum.MISSING_ASSISTANT, null);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -152,7 +157,7 @@ public class LabExaminationServiceImpl implements LabExaminationService {
         LabExamination examination = labExaminationRepository.findById(req.getExaminationId())
                 .orElseThrow(() -> new BadRequestException(BadRequestDictEnum.BAD_LAB_EXAMINATION_ID, req.getExaminationId().toString()));
 
-        if (examination.getLabAssistant() != null)
+        if (examination.getLabAssistant() == null)
             throw new BadRequestException(BadRequestDictEnum.MISSING_ASSISTANT, null);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
